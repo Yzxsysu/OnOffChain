@@ -1,0 +1,5 @@
+package myusedtest
+
+func main() {
+
+}
