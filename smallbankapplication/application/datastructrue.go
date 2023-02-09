@@ -7,6 +7,14 @@ import (
 	"sync"
 )
 
+type SmallBankTransaction struct {
+	TxType  uint8
+	TxId    uint16
+	From    []byte
+	To      []byte
+	Balance int
+}
+
 // TxResult records the
 type TxResult struct {
 	PreTxId              []uint16

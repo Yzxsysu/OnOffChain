@@ -1,7 +1,6 @@
 package application
 
 import (
-	"bytes"
 	"fmt"
 	"github.com/Workiva/go-datastructures/queue"
 	"log"
@@ -18,45 +17,6 @@ const (
 	AddrLength    uint8 = 4
 	DataLength    uint8 = 4
 )
-
-func Serialization(tx []byte) (uint32, []SmallBankTransaction) {
-	// TxJson.Tx_type = 4
-	Txs := bytes.Split(tx, []byte(">"))
-	txNum := len(Txs) - 1
-	ReceiveTx := make([]SmallBankTransaction, len(Txs)-1)
-	for i := 0; i < txNum; i++ {
-		tx := Txs[i]
-		txElements := bytes.Split(tx, []byte(","))
-		var TxJson SmallBankTransaction
-		for _, txElement := range txElements {
-			kv := bytes.Split(txElement, []byte("="))
-			switch {
-			case string(kv[0]) == "TxType":
-				temp_type64, _ := strconv.ParseUint(string(kv[1]), 10, 64)
-				TxJson.TxType = uint8(temp_type64)
-			case string(kv[0]) == "From":
-				TxJson.From = make([]byte, len(kv[1]))
-				copy(TxJson.From, kv[1])
-			case string(kv[0]) == "To":
-				TxJson.To = make([]byte, len(kv[1]))
-				copy(TxJson.To, kv[1])
-			case string(kv[0]) == "Balance":
-				// temp_value := string(kv[1])
-				TxJson.Balance = BytesToInt(kv[1])
-			}
-		}
-		ReceiveTx[i] = TxJson
-	}
-	return 0, ReceiveTx
-}
-
-type SmallBankTransaction struct {
-	TxType  uint8
-	TxId    uint16
-	From    []byte
-	To      []byte
-	Balance int
-}
 
 func (BCstate *BlockchainState) ExecuteSmallBankTransaction(s []SmallBankTransaction, threadNUm int) {
 	Num := len(s)

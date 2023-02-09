@@ -15,15 +15,17 @@ import (
 	"os"
 	"os/signal"
 	"path/filepath"
+	"strconv"
 	"syscall"
 )
 
 var homeDir, isLeader, remotePorts string
-var localPort, group uint
+var localPort, group, accountNum uint
 
 func init() {
 	flag.StringVar(&homeDir, "home", "", "Path to the tendermint config directory (if empty, uses $HOME/.tendermint)")
 	flag.StringVar(&isLeader, "leader", "false", "Is it a leader (default: false)")
+	flag.UintVar(&accountNum, "accountNum", 1000, "The account num of the SmallBank")
 	flag.UintVar(&group, "group", 0, "The group that the node belongs to")
 	flag.UintVar(&localPort, "inport", 10057, "beacon chain rpc port")
 	flag.StringVar(&remotePorts, "outport", "20057,21057", "shards chain rpc port")
@@ -82,6 +84,11 @@ func main() {
 		db.Leader = true
 	} else if isLeader == "false" {
 		db.Leader = false
+	}
+
+	// create account
+	for i := 0; i < int(accountNum); i++ {
+		db.CreateAccount(strconv.Itoa(i), 1000, 1000)
 	}
 
 	app := smallbankapplication.NewSmallBankApplication(db)
