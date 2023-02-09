@@ -1,9 +1,8 @@
-package abic
+package abci
 
 import (
-	"bytes"
-	"github.com/dgraph-io/badger"
 	abcitypes "github.com/tendermint/tendermint/abci/types"
+	"onffchain/smallbankapplication/application"
 )
 
 // 实现abci接口
@@ -11,25 +10,26 @@ var _ abcitypes.Application = (*SmallBankApplication)(nil)
 
 // 定义KVStore程序的结构体
 type SmallBankApplication struct {
-	db           *badger.DB
-	currentBatch *badger.Txn
-}
-
-func (app *SmallBankApplication) SetOption(option abcitypes.RequestSetOption) abcitypes.ResponseSetOption {
-	//TODO implement me
-	panic("implement me")
+	abcitypes.BaseApplication
+	Node *application.BlockchainState
 }
 
 // 创建一个 ABCI APP
-func NewSmallBankApplication(db *badger.DB) *SmallBankApplication {
+func NewSmallBankApplication(node *application.BlockchainState) *SmallBankApplication {
 	return &SmallBankApplication{
-		db: db,
+		Node: node,
 	}
 }
 
+//func (app *SmallBankApplication) SetOption(option abcitypes.RequestSetOption) abcitypes.ResponseSetOption {
+//	//TODO implement me
+//
+//	panic("implement me")
+//}
+
 // 检查交易是否符合自己的要求，返回0时代表有效交易
 func (app *SmallBankApplication) isValid(tx []byte) (code uint32) {
-	// 格式校验，如果不是k=v格式的返回码为1
+	/*// 格式校验，如果不是k=v格式的返回码为1
 	parts := bytes.Split(tx, []byte("="))
 	if len(parts) != 2 {
 		return 1
@@ -55,13 +55,13 @@ func (app *SmallBankApplication) isValid(tx []byte) (code uint32) {
 	})
 	if err != nil {
 		panic(err)
-	}
+	}*/
 
 	return code
 }
 
 func (app *SmallBankApplication) BeginBlock(req abcitypes.RequestBeginBlock) abcitypes.ResponseBeginBlock {
-	app.currentBatch = app.db.NewTransaction(true)
+	//app.currentBatch = app.db.NewTransaction(true)
 	return abcitypes.ResponseBeginBlock{}
 }
 
@@ -73,7 +73,7 @@ func (app SmallBankApplication) CheckTx(req abcitypes.RequestCheckTx) abcitypes.
 
 // 这里我们创建了一个batch，它将存储block的交易。
 func (app *SmallBankApplication) DeliverTx(req abcitypes.RequestDeliverTx) abcitypes.ResponseDeliverTx {
-	code := app.isValid(req.Tx)
+	/*code := app.isValid(req.Tx)
 	if code != 0 {
 		return abcitypes.ResponseDeliverTx{Code: code}
 	}
@@ -85,18 +85,18 @@ func (app *SmallBankApplication) DeliverTx(req abcitypes.RequestDeliverTx) abcit
 	if err != nil {
 		panic(err)
 	}
-
+	*/
 	return abcitypes.ResponseDeliverTx{Code: 0}
 }
 
 func (app *SmallBankApplication) Commit() abcitypes.ResponseCommit {
 	// 往数据库中提交事务，当 Tendermint core 提交区块时，会调用这个函数
-	app.currentBatch.Commit()
+	/*app.currentBatch.Commit()*/
 	return abcitypes.ResponseCommit{Data: []byte{}}
 }
 
 func (app *SmallBankApplication) Query(reqQuery abcitypes.RequestQuery) (resQuery abcitypes.ResponseQuery) {
-	resQuery.Key = reqQuery.Data
+	/*resQuery.Key = reqQuery.Data
 	err := app.db.View(func(txn *badger.Txn) error {
 		item, err := txn.Get(reqQuery.Data)
 		if err != nil && err != badger.ErrKeyNotFound {
@@ -115,7 +115,7 @@ func (app *SmallBankApplication) Query(reqQuery abcitypes.RequestQuery) (resQuer
 	})
 	if err != nil {
 		panic(err)
-	}
+	}*/
 	return
 }
 

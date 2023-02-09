@@ -64,32 +64,34 @@ func NewLock() *Lock {
 
 // NewBlockchainState can choose {goleveldb, cleveldb, memdb, boltdb, rocksdb, badgerdb}
 // input Corresponding name
-func NewBlockchainState(DBName string, leader bool, dir string) *BlockchainState {
+func NewBlockchainState(DBName BackendType, leader bool, dir string) (*BlockchainState, error, error) {
 	var BaseCaseState BlockchainState
 	var err error
+	var err1 error
 	// choose DB
+
 	switch DBName {
-	case string(GoLevelDBBackend):
-		BaseCaseState.CheckingStore, err = dbm.NewDB(DBName, dbm.GoLevelDBBackend, dir)
-		BaseCaseState.SavingStore, err = dbm.NewDB(DBName, dbm.GoLevelDBBackend, dir)
-	case string(CLevelDBBackend):
-		BaseCaseState.CheckingStore, err = dbm.NewDB(DBName, dbm.CLevelDBBackend, dir)
-		BaseCaseState.SavingStore, err = dbm.NewDB(DBName, dbm.CLevelDBBackend, dir)
-	case string(MemDBBackend):
-		BaseCaseState.CheckingStore, err = dbm.NewDB(DBName, dbm.MemDBBackend, dir)
-		BaseCaseState.SavingStore, err = dbm.NewDB(DBName, dbm.MemDBBackend, dir)
-	case string(BoltDBBackend):
-		BaseCaseState.CheckingStore, err = dbm.NewDB(DBName, dbm.BoltDBBackend, dir)
-		BaseCaseState.SavingStore, err = dbm.NewDB(DBName, dbm.BoltDBBackend, dir)
-	case string(RocksDBBackend):
-		BaseCaseState.CheckingStore, err = dbm.NewDB(DBName, dbm.RocksDBBackend, dir)
-		BaseCaseState.SavingStore, err = dbm.NewDB(DBName, dbm.RocksDBBackend, dir)
-	case string(BadgerDBBackend):
-		BaseCaseState.CheckingStore, err = dbm.NewDB(DBName, dbm.BadgerDBBackend, dir)
-		BaseCaseState.SavingStore, err = dbm.NewDB(DBName, dbm.BadgerDBBackend, dir)
+	case GoLevelDBBackend:
+		BaseCaseState.CheckingStore, err = dbm.NewDB("CheckingStore", dbm.GoLevelDBBackend, dir+"check")
+		BaseCaseState.SavingStore, err1 = dbm.NewDB("SavingStore", dbm.GoLevelDBBackend, dir+"save")
+	case CLevelDBBackend:
+		BaseCaseState.CheckingStore, err = dbm.NewDB("CheckingStore", dbm.CLevelDBBackend, dir+"check")
+		BaseCaseState.SavingStore, err1 = dbm.NewDB("SavingStore", dbm.CLevelDBBackend, dir+"save")
+	case MemDBBackend:
+		BaseCaseState.CheckingStore, err = dbm.NewDB("CheckingStore", dbm.MemDBBackend, dir+"check")
+		BaseCaseState.SavingStore, err1 = dbm.NewDB("SavingStore", dbm.MemDBBackend, dir+"save")
+	case BoltDBBackend:
+		BaseCaseState.CheckingStore, err = dbm.NewDB("CheckingStore", dbm.BoltDBBackend, dir+"check")
+		BaseCaseState.SavingStore, err1 = dbm.NewDB("SavingStore", dbm.BoltDBBackend, dir+"save")
+	case RocksDBBackend:
+		BaseCaseState.CheckingStore, err = dbm.NewDB("CheckingStore", dbm.RocksDBBackend, dir+"check")
+		BaseCaseState.SavingStore, err1 = dbm.NewDB("SavingStore", dbm.RocksDBBackend, dir+"save")
+	case BadgerDBBackend:
+		BaseCaseState.CheckingStore, err = dbm.NewDB("CheckingStore", dbm.BadgerDBBackend, dir+"check")
+		BaseCaseState.SavingStore, err1 = dbm.NewDB("SavingStore", dbm.BadgerDBBackend, dir+"save")
 	}
-	if err != nil {
-		log.Fatalf("Create database error: %v", err)
+	if err != nil || err1 != nil {
+		log.Fatalf("Create db error: %v, %v", err, err1)
 	}
 	BaseCaseState.Leader = leader
 	return &BlockchainState{
@@ -98,7 +100,7 @@ func NewBlockchainState(DBName string, leader bool, dir string) *BlockchainState
 		Height:        1,
 		Leader:        leader,
 		AccountLock:   make(map[string]*Lock),
-	}
+	}, err, err1
 }
 
 func (BCstate *BlockchainState) DeliverGraph() {
