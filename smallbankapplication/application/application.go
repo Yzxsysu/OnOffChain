@@ -1,8 +1,8 @@
 package application
 
 import (
-	dbm "github.com/tendermint/tm-db"
 	"log"
+	dbm "onffchain/src/tm-db"
 	"sync"
 )
 
