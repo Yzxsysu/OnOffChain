@@ -13,7 +13,7 @@ remote database with a client setup such as:
 
 	client, err := remotedb.NewRemoteDB(addr, cert)
 	// Make sure to invoke InitRemote!
-	if err := client.InitRemote(&remotedb.Init{Name: "test-remote-db", Type: "leveldb"}); err != nil {
+	if err := client.InitRemote(&remotedb.Init{Name: "test-remote-db", T: "leveldb"}); err != nil {
 	    log.Fatalf("Failed to initialize the remote db")
 	}
 

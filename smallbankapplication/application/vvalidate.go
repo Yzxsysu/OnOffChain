@@ -8,18 +8,18 @@ import (
 func (BCstate *BlockchainState) VValidate(s []SmallBankTransaction, v []uint16, ch chan bool) {
 	l := len(v)
 	var TxType uint8
-	//var TxId uint16
+	//var I uint16
 	var From []byte
 	var To []byte
 	var Balance int
 
 	for i := 0; i < l; i++ {
 		tx := s[v[i]]
-		TxType = tx.TxType
-		//TxId = tx.TxId
-		From = tx.From
-		To = tx.To
-		Balance = tx.Balance
+		TxType = tx.T
+		//I = tx.I
+		From = tx.F
+		To = tx.O
+		Balance = tx.B
 		switch TxType {
 		case GetBalance:
 			go BCstate.VGetBalance(string(From))
@@ -34,7 +34,7 @@ func (BCstate *BlockchainState) VValidate(s []SmallBankTransaction, v []uint16, 
 		case WriteCheck:
 			go BCstate.VWriteCheck(string(From), Balance)
 		default:
-			fmt.Println("TxType doesn't match")
+			fmt.Println("T doesn't match")
 		}
 	}
 	ch <- true

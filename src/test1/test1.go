@@ -2,20 +2,40 @@ package main
 
 import (
 	"bytes"
+	"encoding/json"
+	"fmt"
 	"io"
+	"log"
 	"net/http"
 )
 
-func main() {
-	requestBody := []byte("tx=fromid=0,toid=1,type=1,from=ABCD,to=DCBA,value=20,data=DATA,nonce=1")
-	resp, err := http.Post("http://127.0.0.1:20057/broadcast_tx_commit", "application/x-www-form-urlencoded", bytes.NewBuffer(requestBody))
-	if err != nil {
-		panic(err)
-	}
-	defer func(Body io.ReadCloser) {
-		err := Body.Close()
-		if err != nil {
+type Request struct {
+	Message string `json:"message"`
+}
 
+func main() {
+	// 监听请求
+	http.HandleFunc("/api", func(w http.ResponseWriter, r *http.Request) {
+		// 读取请求内容
+		buf := new(bytes.Buffer)
+		_, err := io.Copy(buf, r.Body)
+		if err != nil {
+			log.Fatalf("read request body failed: %s\n", err)
 		}
-	}(resp.Body)
+		body := buf.Bytes()
+
+		// 将请求内容反序列化为Request结构体
+		var req [][]uint16
+		err = json.Unmarshal(body, &req)
+		if err != nil {
+			log.Fatalf("unmarshal request body failed: %s\n", err)
+		}
+
+		fmt.Printf("received message: %v\n", req)
+	})
+
+	err := http.ListenAndServe(":8000", nil)
+	if err != nil {
+		log.Fatalf("start http server failed: %s\n", err)
+	}
 }

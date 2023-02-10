@@ -67,8 +67,20 @@ func (app *SmallBankApplication) BeginBlock(req abcitypes.RequestBeginBlock) abc
 
 // 当新的交易被添加到Tendermint Core时，它会要求应用程序进行检查(验证格式、签名等)，当返回0时才通过
 func (app SmallBankApplication) CheckTx(req abcitypes.RequestCheckTx) abcitypes.ResponseCheckTx {
-	code := app.isValid(req.Tx)
-	return abcitypes.ResponseCheckTx{Code: code, GasUsed: 1}
+	// Leader execute and send the sub graph
+	var events []abcitypes.Event
+	if app.Node.Leader {
+		events = []abcitypes.Event{
+			{
+				Type: "graph",
+				Attributes: []abcitypes.EventAttribute{
+					{Key: "sender", Value: "Bob", Index: true},
+					{Key: "sender", Value: "Bob", Index: true},
+				},
+			},
+		}
+	}
+	return abcitypes.ResponseCheckTx{Code: 0, GasUsed: 0, Events: events}
 }
 
 // 这里我们创建了一个batch，它将存储block的交易。
@@ -86,6 +98,7 @@ func (app *SmallBankApplication) DeliverTx(req abcitypes.RequestDeliverTx) abcit
 		panic(err)
 	}
 	*/
+
 	return abcitypes.ResponseDeliverTx{Code: 0}
 }
 

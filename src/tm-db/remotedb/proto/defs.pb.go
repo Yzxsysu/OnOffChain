@@ -414,7 +414,7 @@ func (m *Stats) GetTimeAt() int64 {
 }
 
 type Init struct {
-	Type                 string   `protobuf:"bytes,1,opt,name=Type,proto3" json:"Type,omitempty"`
+	Type                 string   `protobuf:"bytes,1,opt,name=T,proto3" json:"T,omitempty"`
 	Name                 string   `protobuf:"bytes,2,opt,name=Name,proto3" json:"Name,omitempty"`
 	Dir                  string   `protobuf:"bytes,3,opt,name=Dir,proto3" json:"Dir,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`

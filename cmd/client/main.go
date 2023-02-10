@@ -1,118 +1,58 @@
 package main
 
 import (
-	"flag"
+	"bytes"
+	"encoding/json"
 	"fmt"
-	"github.com/spf13/viper"
-	abciclient "github.com/tendermint/tendermint/abci/client"
-	cfg "github.com/tendermint/tendermint/config"
-	tmlog "github.com/tendermint/tendermint/libs/log"
-	nm "github.com/tendermint/tendermint/node"
-	"github.com/tendermint/tendermint/types"
-	"log"
-	smallbankapplication "onffchain/smallbankapplication/abci"
+	"io"
+	"net/http"
 	"onffchain/smallbankapplication/application"
-	"os"
-	"os/signal"
-	"path/filepath"
-	"strconv"
-	"syscall"
 )
 
-var homeDir, isLeader, remotePorts string
-var localPort, group, accountNum uint
-
-func init() {
-	flag.StringVar(&homeDir, "home", "", "Path to the tendermint config directory (if empty, uses $HOME/.tendermint)")
-	flag.StringVar(&isLeader, "leader", "false", "Is it a leader (default: false)")
-	flag.UintVar(&accountNum, "accountNum", 1000, "The account num of the SmallBank")
-	flag.UintVar(&group, "group", 0, "The group that the node belongs to")
-	flag.UintVar(&localPort, "inport", 10057, "beacon chain rpc port")
-	flag.StringVar(&remotePorts, "outport", "20057,21057", "shards chain rpc port")
-}
-
+// tx format: 127.0.0.1:20057/broadcast_tx_commit?tx="T=3,I=1,F=1,O=3,B=156>T=1,I=2,F=2,O=1,B=190"
 func main() {
-	// Parse command-line arguments
-	flag.Parse()
-	if homeDir == "" {
-		homeDir = os.ExpandEnv("/home/.tendermint")
-	}
-	// Set default path and arguments
-	config := cfg.DefaultConfig()
+	txs := application.GenerateTx(1000, 1000, 1)
 
-	// Set root(the location of tendermint node)
-	config.SetRoot(homeDir)
+	result, _ := json.Marshal(txs)
 
-	// Set viper working location
-	viper.SetConfigFile(fmt.Sprintf("%s/%s", homeDir, "config/config.toml"))
-
-	// Read in config into viper
-	if err := viper.ReadInConfig(); err != nil {
-		log.Fatalf("Reading config: %v", err)
-	}
-	// Unmarshal unmarshals the config into a Struct. Make sure that the tags
-	// on the fields of the structure are properly set.
-	// It can change the default setting of the config -> config := cfg.DefaultConfig()
-	if err := viper.Unmarshal(config); err != nil {
-		log.Fatalf("Decoding config: %v", err)
-	}
-	// After unmarshaling the config into the config struct, need to validate
-	// whether the config struct is a proper form
-	if err := config.ValidateBasic(); err != nil {
-		log.Fatalf("Invalid configuration data: %v", err)
-	}
-	// GenesisFile is a string type in config struct
-	gf, err := types.GenesisDocFromFile(config.GenesisFile())
-	if err != nil {
-		log.Fatalf("Loading genesis document: %v", err)
-	}
-
-	dbPath := filepath.Join(homeDir, "badger")
-	db, err, err1 := application.NewBlockchainState("badgerdb", true, dbPath)
-	if err != nil || err1 != nil {
-		log.Fatalf("Opening database: %v, %v", err, err1)
-	}
-	defer func() {
-		if err := db.SavingStore.Close(); err != nil {
-			log.Fatalf("Closing database: %v", err)
+	/*sm := make([]application.SmallBankTransaction, 0)
+	err := json.Unmarshal(result, &sm)
+	fmt.Println(len(result))
+	fmt.Println(string(result))
+	fmt.Println(sm)
+	str := ""
+	l := len(txs)
+	for i, tx := range txs {
+		str += "T=" + strconv.Itoa(int(tx.T))
+		str += "," + "I=" + strconv.Itoa(int(tx.I))
+		str += "," + "F=" + string(tx.F)
+		str += "," + "O=" + string(tx.O)
+		str += "," + "B=" + strconv.Itoa(tx.B)
+		if i != l-1 {
+			str += ">"
 		}
-		if err := db.CheckingStore.Close(); err != nil {
-			log.Fatalf("Closing database: %v", err)
-		}
-	}()
-	if isLeader == "true" {
-		db.Leader = true
-	} else if isLeader == "false" {
-		db.Leader = false
 	}
-
-	// create account
-	for i := 0; i < int(accountNum); i++ {
-		db.CreateAccount(strconv.Itoa(i), 1000, 1000)
-	}
-
-	app := smallbankapplication.NewSmallBankApplication(db)
-	acc := abciclient.NewLocalCreator(app)
-
-	logger := tmlog.MustNewDefaultLogger(tmlog.LogFormatPlain, tmlog.LogLevelInfo, false)
-	node, err := nm.New(config, logger, acc, gf)
-
+	fmt.Println(len(str))
+	//requestBody := []byte(str)*/
+	resp, err := http.Post("http://127.0.0.1:20057/broadcast_tx_commit", "application/json", bytes.NewBuffer(result))
+	fmt.Println(resp)
+	fmt.Println(len(result))
 	if err != nil {
-		log.Fatalf("Creating node: %v", err)
+		fmt.Println(err)
 	}
-	err = node.Start()
-	if err != nil {
-		log.Fatalf("Starting node: %v", err)
-	}
-	defer func() {
-		err = node.Stop()
+	defer func(Body io.ReadCloser) {
+		err := Body.Close()
 		if err != nil {
-			log.Fatalf("Stoping node: %v", err)
+			fmt.Println(err)
 		}
-		node.Wait()
-	}()
+	}(resp.Body)
 
-	c := make(chan os.Signal, 1)
-	signal.Notify(c, os.Interrupt, syscall.SIGTERM)
-	<-c
+	/*fmt.Println(len(str))
+	request1 := "127.0.0.1:20057/broadcast_tx_commit?tx=\"" + str + "\""
+	//request1 := "127.0.0.1:20057/broadcast_tx_commit?tx=\"" + str + "\""
+	_, err = http.Get("http://" + request1)
+	if err != nil {
+		fmt.Println(err)
+	}*/
+
 }

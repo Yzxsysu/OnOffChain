@@ -30,11 +30,11 @@ func (BCstate *BlockchainState) ExecuteSmallBankTransaction(s []SmallBankTransac
 
 	for i := 0; i < Num; i++ {
 		tx := s[i]
-		TxType = tx.TxType
-		TxId = tx.TxId
-		From = tx.From
-		To = tx.To
-		Balance = tx.Balance
+		TxType = tx.T
+		TxId = tx.I
+		From = tx.F
+		To = tx.O
+		Balance = tx.B
 
 		switch TxType {
 		case GetBalance:
@@ -50,7 +50,7 @@ func (BCstate *BlockchainState) ExecuteSmallBankTransaction(s []SmallBankTransac
 		case WriteCheck:
 			go BCstate.WriteCheck(TxId, string(From), Balance, txResult)
 		default:
-			fmt.Println("TxType doesn't match")
+			fmt.Println("T doesn't match")
 		}
 	}
 	l := len(txResult)
@@ -68,7 +68,7 @@ func GenerateGraph(txResult <-chan TxResult, pq *queue.PriorityQueue, visited []
 				// if the pre tx id is zero
 				// weight is 0
 				/*e := NewEdge()
-				e.To = t.CurrentTxId
+				e.O = t.CurrentTxId
 				err := pq.Put(e)
 				if err != nil {
 					log.Println(err)
@@ -142,8 +142,8 @@ func CutGraph(m map[uint16][]Vertex, pq *queue.PriorityQueue, group int, visited
 				for i := 0; i < length; i++ {
 					if v[i].CurrentTxId == edge.To {
 						GE := NewGraphEdge()
-						GE.From = edge.From
-						GE.To = edge.To
+						GE.F = edge.From
+						GE.T = edge.To
 						s := "name=" + v[i].AccountName
 						if v[i].SaveVersion != 0 {
 							s += ",SaveVersion=" + strconv.Itoa(int(v[i].SaveVersion))
@@ -153,7 +153,7 @@ func CutGraph(m map[uint16][]Vertex, pq *queue.PriorityQueue, group int, visited
 							s += ",CheckVersion=" + strconv.Itoa(int(v[i].CheckVersion))
 							s += ",ConsistentCheckValue=" + strconv.Itoa(int(v[i].ConsistentCheckValue))
 						}
-						GE.data = s
+						GE.D = s
 						g = append(g, GE)
 						break
 					}
@@ -178,8 +178,8 @@ func CutGraph(m map[uint16][]Vertex, pq *queue.PriorityQueue, group int, visited
 			for i := 0; i < length; i++ {
 				if v[i].CurrentTxId == edge.To {
 					GE := NewGraphEdge()
-					GE.From = edge.From
-					GE.To = edge.To
+					GE.F = edge.From
+					GE.T = edge.To
 					s := "name=" + v[i].AccountName
 					if v[i].SaveVersion != 0 {
 						s += ",SaveVersion=" + strconv.Itoa(int(v[i].SaveVersion))
@@ -189,7 +189,7 @@ func CutGraph(m map[uint16][]Vertex, pq *queue.PriorityQueue, group int, visited
 						s += ",CheckVersion=" + strconv.Itoa(int(v[i].CheckVersion))
 						s += ",ConsistentCheckValue=" + strconv.Itoa(int(v[i].ConsistentCheckValue))
 					}
-					GE.data = s
+					GE.D = s
 					g = append(g, GE)
 					break
 				}
@@ -200,8 +200,8 @@ func CutGraph(m map[uint16][]Vertex, pq *queue.PriorityQueue, group int, visited
 			for i := 0; i < length; i++ {
 				if v[i].CurrentTxId == edge.To {
 					GE := NewGraphEdge()
-					GE.From = edge.From
-					GE.To = edge.To
+					GE.F = edge.From
+					GE.T = edge.To
 					txNum++
 					g = append(g, GE)
 					break

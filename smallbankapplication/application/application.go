@@ -148,7 +148,7 @@ func (BCstate *BlockchainState) GetBalance(TxId uint16, A string, txResult chan<
 	result.SaveBool = append(result.SaveBool, true)
 	result.CheckBool = append(result.CheckBool, true)
 
-	result.PreTxId = append(result.PreTxId, dataA.WrittenBy) // 0 or pre witten TxId
+	result.PreTxId = append(result.PreTxId, dataA.WrittenBy) // 0 or pre witten I
 
 	result.SaveVersion = append(result.SaveVersion, dataA.SaveVersion)    // 0 or next version
 	result.CheckVersion = append(result.CheckVersion, dataA.CheckVersion) // 0 or next version
@@ -202,7 +202,7 @@ func (BCstate *BlockchainState) Amalgamate(TxId uint16, A string, B string, txRe
 
 	result.SaveBool = append(result.SaveBool, true, false)
 	result.CheckBool = append(result.CheckBool, false, true)
-	result.PreTxId = append(result.PreTxId, dataA.WrittenBy, dataB.WrittenBy)                 // 0 or pre witten TxId
+	result.PreTxId = append(result.PreTxId, dataA.WrittenBy, dataB.WrittenBy)                 // 0 or pre witten I
 	result.SaveVersion = append(result.SaveVersion, dataA.SaveVersion, dataB.SaveVersion)     // 0 or next version
 	result.CheckVersion = append(result.CheckVersion, dataA.CheckVersion, dataB.CheckVersion) // 0 or next version
 

@@ -8,11 +8,11 @@ import (
 )
 
 type SmallBankTransaction struct {
-	TxType  uint8
-	TxId    uint16
-	From    []byte
-	To      []byte
-	Balance int
+	T uint8
+	I uint16
+	F []byte
+	O []byte
+	B int
 }
 
 // TxResult records the
@@ -110,9 +110,9 @@ func NewVertex() Vertex {
 }
 
 type GraphEdge struct {
-	From uint16
-	To   uint16
-	data string
+	F uint16
+	T uint16
+	D string
 }
 
 func NewGraphEdge() GraphEdge {

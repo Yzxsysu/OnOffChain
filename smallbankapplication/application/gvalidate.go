@@ -13,14 +13,14 @@ func Dfs(GE [][]GraphEdge, groupNum int) ([]uint16, map[uint16]string) {
 	m := make(map[uint16]string)
 	s := NewSortedGraph(uint16(l))
 	for i := 0; i < l; i++ {
-		from := sub[i].From
-		to := sub[i].To
+		from := sub[i].F
+		to := sub[i].T
 		s.AddEdge(from, to)
 		_, ok := m[to]
 		if ok {
-			m[to] += ">" + sub[i].data
+			m[to] += ">" + sub[i].D
 		} else {
-			m[to] = sub[i].data
+			m[to] = sub[i].D
 		}
 	}
 	order := s.TopoSortByDFS()
@@ -37,11 +37,11 @@ func (BCstate *BlockchainState) GValidate(s []SmallBankTransaction, GE [][]Graph
 	var To []byte
 	var Balance int
 	for i := lG - 1; i >= 0; i-- {
-		TxType = s[order[i]].TxType
-		TxId = s[order[i]].TxId
-		From = s[order[i]].From
-		To = s[order[i]].To
-		Balance = s[order[i]].Balance
+		TxType = s[order[i]].T
+		TxId = s[order[i]].I
+		From = s[order[i]].F
+		To = s[order[i]].O
+		Balance = s[order[i]].B
 		switch TxType {
 		case GetBalance:
 			BCstate.GGetBalance(TxId, string(From), m, version)
@@ -56,7 +56,7 @@ func (BCstate *BlockchainState) GValidate(s []SmallBankTransaction, GE [][]Graph
 		case WriteCheck:
 			BCstate.GWriteCheck(TxId, string(From), Balance, m, version)
 		default:
-			fmt.Println("TxType doesn't match")
+			fmt.Println("T doesn't match")
 		}
 	}
 	ch <- true
@@ -92,7 +92,7 @@ func (BCstate *BlockchainState) GAmalgamate(TxId uint16, A string, B string, m m
 		s1 := strings.Split(v, "<")
 		l := len(s1)
 		if l == 0 {
-			log.Println("data is nil when validating graph edge")
+			log.Println("D is nil when validating graph edge")
 		}
 		// "name="1",SaveVersion=10,ConsistentSaveValue=2"
 		for _, elements := range s1 {
@@ -185,7 +185,7 @@ func (BCstate *BlockchainState) GUpdateBalance(TxId uint16, A string, Balance in
 		s1 := strings.Split(v, "<")
 		l := len(s1)
 		if l == 0 {
-			log.Println("data is nil when validating graph edge")
+			log.Println("D is nil when validating graph edge")
 		}
 		// "name="1",CheckVersion=10,ConsistentCheckValue=2"
 		for _, elements := range s1 {
@@ -251,7 +251,7 @@ func (BCstate *BlockchainState) GUpdateSaving(TxId uint16, A string, Balance int
 		s1 := strings.Split(v, "<")
 		l := len(s1)
 		if l == 0 {
-			log.Println("data is nil when validating graph edge")
+			log.Println("D is nil when validating graph edge")
 		}
 		// "name="1",SaveVersion=10,ConsistentSaveValue=2"
 		for _, elements := range s1 {
@@ -324,7 +324,7 @@ func (BCstate *BlockchainState) GSendPayment(TxId uint16, A string, B string, Ba
 		s1 := strings.Split(v, "<")
 		l := len(s1)
 		if l == 0 {
-			log.Println("data is nil when validating graph edge")
+			log.Println("D is nil when validating graph edge")
 		}
 		// "name="1",CheckVersion=10,ConsistentCheckValue=2"
 		for _, elements := range s1 {
@@ -422,7 +422,7 @@ func (BCstate *BlockchainState) GWriteCheck(TxId uint16, A string, Balance int, 
 		s1 := strings.Split(v, "<")
 		l := len(s1)
 		if l == 0 {
-			log.Println("data is nil when validating graph edge")
+			log.Println("D is nil when validating graph edge")
 		}
 		// "name="1",SaveVersion=10,ConsistentSaveValue=2"
 		for _, elements := range s1 {

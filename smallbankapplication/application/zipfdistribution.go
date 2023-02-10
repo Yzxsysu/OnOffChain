@@ -93,14 +93,14 @@ func GenerateTx(TxNum float64, TxAccountNum float64, Skew float64) []SmallBankTr
 	from, to := z.Uint64()
 	var s SmallBankTransaction
 	for i := 0; i < int(TxNum); i++ {
-		s.From = IntToBytes(from[i])
-		s.To = IntToBytes(to[i])
+		s.F = IntToBytes(from[i])
+		s.O = IntToBytes(to[i])
 		rand.Seed(time.Now().UnixNano())
 		TxType := rand.Intn(6) + 1
-		s.TxType = uint8(TxType)
+		s.T = uint8(TxType)
 		Balance := rand.Intn(1000) + 1
-		s.Balance = Balance
-		s.TxId = uint16(i + 1)
+		s.B = Balance
+		s.I = uint16(i + 1)
 		txList[i] = s
 	}
 	return txList
