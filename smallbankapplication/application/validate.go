@@ -1,5 +1,11 @@
 package application
 
+import (
+	rpchttp "github.com/tendermint/tendermint/rpc/client/http"
+)
+
+var Client *rpchttp.HTTP
+
 func (BCstate *BlockchainState) Validate(s []SmallBankTransaction, GE [][]GraphEdge, u [][]uint16, groupNum int) {
 	v := u[groupNum]
 	version := make(map[string]AccountVersion)
@@ -20,4 +26,18 @@ type AccountVersion struct {
 
 func NewAccountVersion() AccountVersion {
 	return AccountVersion{}
+}
+
+func GetEventFromCheckTx() {
+
+}
+
+// GetGE get the GraphEdge from the Leader
+func GetGE() {
+
+}
+
+// GetU get the GraphEdge from the Leader
+func GetU() {
+
 }

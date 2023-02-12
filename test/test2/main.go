@@ -6,6 +6,7 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"time"
 )
 
 var dataQueue [][]byte
@@ -23,6 +24,7 @@ func sendData(url string, data []byte) error {
 
 // 接收端代码
 func receiveData(w http.ResponseWriter, r *http.Request) {
+
 	// 将接收到的数据放入队列
 	buf := new(bytes.Buffer)
 	_, err := io.Copy(buf, r.Body)
@@ -34,16 +36,20 @@ func receiveData(w http.ResponseWriter, r *http.Request) {
 		log.Println("Error reading the request body:", err)
 		return
 	}
-	if len(dataQueue) >= 99 {
-		return
+	if len(dataQueue) >= 10 {
+		time.Sleep(time.Second)
 	}
 	// 将数据加入队列
 	dataQueue = append(dataQueue, body)
+	_, err = fmt.Fprintf(w, "Hello, %q", r.URL.Path)
+	if err != nil {
+		return
+	}
 }
 
 // 启动接收端
 func startReceiver() {
-	http.HandleFunc("/", receiveData)
+	http.HandleFunc("/api", receiveData)
 	err := http.ListenAndServe(":8080", nil)
 	if err != nil {
 		log.Fatal("ListenAndServe:", err)
@@ -78,7 +84,7 @@ func main() {
 		str := fmt.Sprintf(`%v, {"message": "Hello, World!"}`, i)
 		i++
 		data := []byte(str)
-		err := sendData("http://localhost:8080/", data)
+		err := sendData("http://localhost:8080/api", data)
 		if err != nil {
 			log.Println("Error sending data:", err)
 		}

@@ -1,6 +1,7 @@
 package abci
 
 import (
+	"encoding/json"
 	abcitypes "github.com/tendermint/tendermint/abci/types"
 	"onffchain/smallbankapplication/application"
 )
@@ -68,19 +69,32 @@ func (app *SmallBankApplication) BeginBlock(req abcitypes.RequestBeginBlock) abc
 // 当新的交易被添加到Tendermint Core时，它会要求应用程序进行检查(验证格式、签名等)，当返回0时才通过
 func (app SmallBankApplication) CheckTx(req abcitypes.RequestCheckTx) abcitypes.ResponseCheckTx {
 	// Leader execute and send the sub graph
-	var events []abcitypes.Event
+	//var events []abcitypes.Event
+	var mSub []byte
+	var mSubV []byte
 	if app.Node.Leader {
-		events = []abcitypes.Event{
+		Sub, SubV := app.Node.ResolveAndExecuteTx(req.Tx)
+		mSub, err := json.Marshal(Sub)
+		if err != nil {
+			return abcitypes.ResponseCheckTx{}
+		}
+		mSubV, err := json.Marshal(SubV)
+		if err != nil {
+			return abcitypes.ResponseCheckTx{}
+		}
+		/*events = []abcitypes.Event{
 			{
-				Type: "graph",
+				Type: "G",
 				Attributes: []abcitypes.EventAttribute{
-					{Key: "sender", Value: "Bob", Index: true},
-					{Key: "sender", Value: "Bob", Index: true},
+					{Key: "S", Value: string(mSub), Index: true},
+					{Key: "SV", Value: string(mSubV), Index: true},
 				},
 			},
-		}
+		}*/
+
 	}
-	return abcitypes.ResponseCheckTx{Code: 0, GasUsed: 0, Events: events}
+
+	return abcitypes.ResponseCheckTx{Code: 0, GasUsed: 0}
 }
 
 // 这里我们创建了一个batch，它将存储block的交易。

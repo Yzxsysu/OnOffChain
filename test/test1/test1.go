@@ -32,6 +32,13 @@ func main() {
 		}
 
 		fmt.Printf("received message: %v\n", req)
+		_, err = fmt.Fprintf(w, "Hello, %q", r.URL.Path)
+		if err != nil {
+			return
+		}
+		if err != nil {
+			fmt.Println(err)
+		}
 	})
 
 	err := http.ListenAndServe(":8000", nil)

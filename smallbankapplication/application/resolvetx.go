@@ -90,7 +90,7 @@ func (BCstate *BlockchainState) ResolveAndExecuteTx(request []byte) ([][]GraphEd
 	l = len(txResult)
 	pq := queue.NewPriorityQueue(l, true)
 	visited := make([]bool, l)
-	sub, SubV := CutGraph(GenerateGraph(txResult, pq, visited), pq, 3, visited)
+	Sub, SubV := CutGraph(GenerateGraph(txResult, pq, visited), pq, 3, visited)
 	// need to send to on chain and other off chain
-	return sub, SubV
+	return Sub, SubV
 }

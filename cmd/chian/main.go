@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"flag"
 	"fmt"
 	"github.com/spf13/viper"
@@ -8,6 +9,7 @@ import (
 	cfg "github.com/tendermint/tendermint/config"
 	tmlog "github.com/tendermint/tendermint/libs/log"
 	nm "github.com/tendermint/tendermint/node"
+	rpchttp "github.com/tendermint/tendermint/rpc/client/http"
 	"github.com/tendermint/tendermint/types"
 	"log"
 	smallbankapplication "onffchain/smallbankapplication/abci"
@@ -17,14 +19,17 @@ import (
 	"path/filepath"
 	"strconv"
 	"syscall"
+	"time"
 )
 
 var homeDir, isLeader, remotePorts string
 var localPort, group, accountNum, coreNum uint
+var leaderIp string
 
 func init() {
 	flag.StringVar(&homeDir, "home", "", "Path to the tendermint config directory (if empty, uses $HOME/.tendermint)")
 	flag.StringVar(&isLeader, "leader", "false", "Is it a leader (default: false)")
+	flag.StringVar(&leaderIp, "leaderIp", "0.0.0.0:26657", "Let replica subscribe the websocket")
 	flag.UintVar(&accountNum, "accountNum", 1000, "The account num of the SmallBank")
 	flag.UintVar(&group, "group", 0, "The group that the node belongs to")
 	flag.UintVar(&coreNum, "coreNum", 8, "control the num of cpu's cores")
@@ -32,9 +37,35 @@ func init() {
 	flag.StringVar(&remotePorts, "outport", "20057,21057", "shards chain rpc port")
 }
 
+var Client *rpchttp.HTTP
+
+func Subscribe(ip string) {
+	var err error
+
+	Client, err = rpchttp.New("tcp:" + ip + "/websocket")
+	if err != nil {
+		fmt.Println(err)
+	}
+	err = Client.Start()
+	if err != nil {
+		fmt.Println(err)
+	}
+}
+
 func main() {
 	// Parse command-line arguments
 	flag.Parse()
+
+	// Subscribe to the leader websocket
+	Subscribe(leaderIp)
+	application.Client = Client
+	defer func(client *rpchttp.HTTP) {
+		err := client.Stop()
+		if err != nil {
+
+		}
+	}(Client)
+
 	if homeDir == "" {
 		homeDir = os.ExpandEnv("/home/.tendermint")
 	}
@@ -84,6 +115,18 @@ func main() {
 	if isLeader == "true" {
 		db.Leader = true
 	} else if isLeader == "false" {
+		ctx, cancel := context.WithTimeout(context.Background(), 1*time.Second)
+		defer cancel()
+		query := "G.S=bob"
+		txs, err := Client.Subscribe(ctx, "test-Client", query)
+		if err != nil {
+			fmt.Println(err)
+		}
+		go func() {
+			for e := range txs {
+				fmt.Println("got ", e.Data.(types.EventDataTx))
+			}
+		}()
 		db.Leader = false
 	}
 
