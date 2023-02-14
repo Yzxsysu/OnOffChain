@@ -14,8 +14,8 @@ const (
 	UpdateSaving  uint8 = 4
 	SendPayment   uint8 = 5
 	WriteCheck    uint8 = 6
-	AddrLength    uint8 = 4
-	DataLength    uint8 = 4
+	//AddrLength    uint8 = 4
+	//DataLength    uint8 = 4
 )
 
 func (BCstate *BlockchainState) ExecuteSmallBankTransaction(s []SmallBankTransaction, threadNUm int) {

@@ -1,4 +1,4 @@
-package application
+package main
 
 import (
 	"fmt"
@@ -7,27 +7,7 @@ import (
 	"strings"
 )
 
-func Dfs(GE [][]GraphEdge, groupNum int) ([]uint16, map[uint16]string) {
-	sub := GE[groupNum]
-	l := len(sub)
-	m := make(map[uint16]string)
-	s := NewSortedGraph(uint16(l))
-	for i := 0; i < l; i++ {
-		from := sub[i].F
-		to := sub[i].T
-		s.AddEdge(from, to)
-		_, ok := m[to]
-		if ok {
-			m[to] += ">" + sub[i].D
-		} else {
-			m[to] = sub[i].D
-		}
-	}
-	order := s.TopoSortByDFS()
-	return order, m
-}
-
-func (BCstate *BlockchainState) GValidate(s *[]SmallBankTransaction, GE [][]GraphEdge, group int, v chan map[string]AccountVersion, ch chan bool) {
+func OValidate(s *[]SmallBankTransaction, GE [][]GraphEdge, group int, v chan map[string]AccountVersion) {
 	order, m := Dfs(GE, group)
 	lG := len(order)
 	version := make(map[string]AccountVersion)
@@ -44,30 +24,29 @@ func (BCstate *BlockchainState) GValidate(s *[]SmallBankTransaction, GE [][]Grap
 		Balance = (*s)[order[i]].B
 		switch TxType {
 		case GetBalance:
-			BCstate.GGetBalance(TxId, string(From), m, version)
+			OGetBalance(TxId, string(From), m, version)
 		case Amalgamate:
-			BCstate.GAmalgamate(TxId, string(From), string(To), m, version)
+			OAmalgamate(TxId, string(From), string(To), m, version)
 		case UpdateBalance:
-			BCstate.GUpdateBalance(TxId, string(From), Balance, m, version)
+			OUpdateBalance(TxId, string(From), Balance, m, version)
 		case UpdateSaving:
-			BCstate.GUpdateSaving(TxId, string(From), Balance, m, version)
+			OUpdateSaving(TxId, string(From), Balance, m, version)
 		case SendPayment:
-			BCstate.GSendPayment(TxId, string(From), string(To), Balance, m, version)
+			OSendPayment(TxId, string(From), string(To), Balance, m, version)
 		case WriteCheck:
-			BCstate.GWriteCheck(TxId, string(From), Balance, m, version)
+			OWriteCheck(TxId, string(From), Balance, m, version)
 		default:
 			fmt.Println("T doesn't match")
 		}
 	}
-	ch <- true
 	v <- version
 }
 
-func (BCstate *BlockchainState) GGetBalance(TxId uint16, A string, m map[uint16]string, version map[string]AccountVersion) {
+func OGetBalance(TxId uint16, A string, m map[uint16]string, version map[string]AccountVersion) {
 	// don't need to modify the state of BlockchainState
 }
 
-func (BCstate *BlockchainState) GAmalgamate(TxId uint16, A string, B string, m map[uint16]string, version map[string]AccountVersion) {
+func OAmalgamate(TxId uint16, A string, B string, m map[uint16]string, version map[string]AccountVersion) {
 	var SaveInt int
 	var CheckInt int
 
@@ -133,43 +112,39 @@ func (BCstate *BlockchainState) GAmalgamate(TxId uint16, A string, B string, m m
 		temp, _ := strconv.ParseInt(ConsistentSaveValue, 10, 64)
 		SaveInt = int(temp)
 	} else {
-		Save, err := BCstate.SavingStore.Get([]byte(A))
-		if err != nil {
+		Save, err := mSave[A]
+		if err != true {
 			log.Println(err)
 		}
-		SaveInt = BytesToInt(Save)
+		SaveInt = Save
 	}
 
 	if ConsistentCheckValue != "" {
 		temp, _ := strconv.ParseInt(ConsistentCheckValue, 10, 64)
 		CheckInt = int(temp)
 	} else {
-		Check, err := BCstate.CheckingStore.Get([]byte(B))
-		if err != nil {
+		Check, err := mCheck[B]
+		if err != true {
 			log.Println(err)
 		}
-		CheckInt = BytesToInt(Check)
+		CheckInt = Check
 	}
 
 	SaveInt = SaveInt + CheckInt
-	err := BCstate.SavingStore.Set([]byte(A), IntToBytes(SaveInt))
-	if err != nil {
-		log.Println(err)
-	}
+	//mSave[A] = SaveInt
+
 	AVersion := version[A]
 	AVersion.Save = SaveInt
 	version[A] = AVersion
 
-	err = BCstate.CheckingStore.Set([]byte(B), IntToBytes(0))
-	if err != nil {
-		log.Println(err)
-	}
+	//mCheck[B] = 0
+
 	AVersion = version[B]
 	AVersion.Check = 0
 	version[B] = AVersion
 }
 
-func (BCstate *BlockchainState) GUpdateBalance(TxId uint16, A string, Balance int, m map[uint16]string, version map[string]AccountVersion) {
+func OUpdateBalance(TxId uint16, A string, Balance int, m map[uint16]string, version map[string]AccountVersion) {
 	var name string
 	var CheckVersion string
 	var ConsistentCheckValue string
@@ -216,26 +191,23 @@ func (BCstate *BlockchainState) GUpdateBalance(TxId uint16, A string, Balance in
 		temp, _ := strconv.ParseInt(ConsistentCheckValue, 10, 64)
 		CheckInt = int(temp)
 	} else {
-		Check, err := BCstate.CheckingStore.Get([]byte(A))
-		if err != nil {
+		Check, err := mCheck[A]
+		if err != true {
 			log.Println(err)
 		}
-		CheckInt = BytesToInt(Check)
+		CheckInt = Check
 	}
 
 	CheckInt += Balance
 
-	err := BCstate.CheckingStore.Set([]byte(A), IntToBytes(CheckInt))
-	if err != nil {
-		log.Println(err)
-	}
+	//mCheck[A] = CheckInt
 
 	AVersion := version[A]
 	AVersion.Check = CheckInt
 	version[A] = AVersion
 }
 
-func (BCstate *BlockchainState) GUpdateSaving(TxId uint16, A string, Balance int, m map[uint16]string, version map[string]AccountVersion) {
+func OUpdateSaving(TxId uint16, A string, Balance int, m map[uint16]string, version map[string]AccountVersion) {
 	var name string
 	var SaveVersion string
 	var ConsistentSaveValue string
@@ -281,24 +253,22 @@ func (BCstate *BlockchainState) GUpdateSaving(TxId uint16, A string, Balance int
 		temp, _ := strconv.ParseInt(ConsistentSaveValue, 10, 64)
 		SaveInt = int(temp)
 	} else {
-		Save, err := BCstate.SavingStore.Get([]byte(A))
-		if err != nil {
+		Save, err := mSave[A]
+		if err != true {
 			log.Println(err)
 		}
-		SaveInt = BytesToInt(Save)
+		SaveInt = Save
 	}
 
 	SaveInt += Balance
-	err := BCstate.CheckingStore.Set([]byte(A), IntToBytes(SaveInt))
-	if err != nil {
-		log.Println(err)
-	}
+	//mSave[A] = SaveInt
+
 	AVersion := version[A]
 	AVersion.Save = SaveInt
 	version[A] = AVersion
 }
 
-func (BCstate *BlockchainState) GSendPayment(TxId uint16, A string, B string, Balance int, m map[uint16]string, version map[string]AccountVersion) {
+func OSendPayment(TxId uint16, A string, B string, Balance int, m map[uint16]string, version map[string]AccountVersion) {
 	var name string
 	var CheckVersion string
 	var ConsistentCheckValue string
@@ -363,35 +333,31 @@ func (BCstate *BlockchainState) GSendPayment(TxId uint16, A string, B string, Ba
 		temp, _ := strconv.ParseInt(CheckAS, 10, 64)
 		CheckIntA = int(temp)
 	} else {
-		CheckA, err := BCstate.CheckingStore.Get([]byte(A))
-		if err != nil {
+		CheckA, err := mCheck[A]
+		if err != true {
 			log.Println(err)
 		}
-		CheckIntA = BytesToInt(CheckA)
+		CheckIntA = CheckA
 	}
 
 	if CheckBS != "" {
 		temp, _ := strconv.ParseInt(CheckBS, 10, 64)
 		CheckIntB = int(temp)
 	} else {
-		CheckB, err := BCstate.CheckingStore.Get([]byte(B))
-		if err != nil {
+		CheckB, err := mCheck[B]
+		if err != true {
 			log.Println(err)
 		}
-		CheckIntB = BytesToInt(CheckB)
+		CheckIntB = CheckB
 	}
 
 	CheckIntA -= Balance
 	CheckIntB += Balance
 	// update check value
-	err := BCstate.CheckingStore.Set([]byte(A), IntToBytes(CheckIntA))
-	if err != nil {
-		log.Println(err)
-	}
-	err = BCstate.CheckingStore.Set([]byte(B), IntToBytes(CheckIntB))
-	if err != nil {
-		log.Println(err)
-	}
+	//mCheck[A] = CheckIntA
+
+	//mCheck[B] = CheckIntB
+
 	AVersion := version[A]
 	AVersion.Check = CheckIntA
 	version[A] = AVersion
@@ -401,7 +367,7 @@ func (BCstate *BlockchainState) GSendPayment(TxId uint16, A string, B string, Ba
 	version[B] = AVersion
 }
 
-func (BCstate *BlockchainState) GWriteCheck(TxId uint16, A string, Balance int, m map[uint16]string, version map[string]AccountVersion) {
+func OWriteCheck(TxId uint16, A string, Balance int, m map[uint16]string, version map[string]AccountVersion) {
 	var SaveInt int
 	var CheckInt int
 
@@ -462,22 +428,22 @@ func (BCstate *BlockchainState) GWriteCheck(TxId uint16, A string, Balance int, 
 		temp, _ := strconv.ParseInt(ConsistentSaveValue, 10, 64)
 		SaveInt = int(temp)
 	} else {
-		Save, err := BCstate.SavingStore.Get([]byte(A))
-		if err != nil {
+		Save, err := mSave[A]
+		if err != true {
 			log.Println(err)
 		}
-		SaveInt = BytesToInt(Save)
+		SaveInt = Save
 	}
 
 	if ConsistentCheckValue != "" {
 		temp, _ := strconv.ParseInt(ConsistentCheckValue, 10, 64)
 		CheckInt = int(temp)
 	} else {
-		Check, err := BCstate.CheckingStore.Get([]byte(A))
-		if err != nil {
+		Check, err := mCheck[A]
+		if err != true {
 			log.Println(err)
 		}
-		CheckInt = BytesToInt(Check)
+		CheckInt = Check
 	}
 
 	if SaveInt+CheckInt < Balance {
@@ -485,10 +451,8 @@ func (BCstate *BlockchainState) GWriteCheck(TxId uint16, A string, Balance int, 
 	} else {
 		CheckInt = CheckInt - Balance
 	}
-	err := BCstate.CheckingStore.Set([]byte(A), IntToBytes(CheckInt))
-	if err != nil {
-		log.Println(err)
-	}
+	//mCheck[A] = CheckInt
+
 	AVersion := version[A]
 	AVersion.Check = CheckInt
 	version[A] = AVersion

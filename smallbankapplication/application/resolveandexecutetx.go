@@ -15,7 +15,7 @@ const (
 	BalanceString string = "B"
 )
 
-func (BCstate *BlockchainState) ResolveAndExecuteTx(request []byte) ([][]GraphEdge, [][]uint16) {
+func (BCstate *BlockchainState) ResolveAndExecuteTx(request *[]byte) ([][]GraphEdge, [][]uint16) {
 	// T=3,I=1,F=1,O=3,B=156>T=1,I=2,F=2,O=1,B=190"
 	/*txs := bytes.Split(request, []byte(">"))
 	l := len(txs)
@@ -23,7 +23,7 @@ func (BCstate *BlockchainState) ResolveAndExecuteTx(request []byte) ([][]GraphEd
 		log.Println("the tx is nil")
 	}*/
 	ReceiveTx := make([]SmallBankTransaction, 0)
-	err := json.Unmarshal(request, &ReceiveTx)
+	err := json.Unmarshal(*request, &ReceiveTx)
 	if err != nil {
 		log.Println(err)
 	}
