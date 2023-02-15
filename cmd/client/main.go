@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"io"
 	"net/http"
 	"onffchain/smallbankapplication/application"
 )
@@ -40,12 +39,12 @@ func main() {
 	if err != nil {
 		fmt.Println(err)
 	}
-	defer func(Body io.ReadCloser) {
-		err := Body.Close()
-		if err != nil {
-			fmt.Println(err)
-		}
-	}(resp.Body)
+	//defer func(Body io.ReadCloser) {
+	//	err := Body.Close()
+	//	if err != nil {
+	//		fmt.Println(err)
+	//	}
+	//}(resp.Body)
 
 	/*fmt.Println(len(str))
 	request1 := "127.0.0.1:20057/broadcast_tx_commit?tx=\"" + str + "\""

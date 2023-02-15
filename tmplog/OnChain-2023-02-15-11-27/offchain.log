@@ -1,0 +1,9 @@
+panic: assignment to entry in nil map
+
+goroutine 1 [running]:
+main.CreateAccount(...)
+	/home/WorkPlace/github.com/Yzxsysu/OnOffChain/cmd/offchain/processdata.go:7
+main.CreateAccountNum(0x3e8)
+	/home/WorkPlace/github.com/Yzxsysu/OnOffChain/cmd/offchain/processdata.go:13 +0x5c
+main.main()
+	/home/WorkPlace/github.com/Yzxsysu/OnOffChain/cmd/offchain/main.go:50 +0x189

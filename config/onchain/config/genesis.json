@@ -1,0 +1,35 @@
+{
+  "genesis_time": "2022-12-06T08:52:10.716396987Z",
+  "chain_id": "test-chain-RUbbkK",
+  "initial_height": "0",
+  "consensus_params": {
+    "block": {
+      "max_bytes": "22020096",
+      "max_gas": "-1",
+      "time_iota_ms": "1000"
+    },
+    "evidence": {
+      "max_age_num_blocks": "100000",
+      "max_age_duration": "172800000000000",
+      "max_bytes": "1048576"
+    },
+    "validator": {
+      "pub_key_types": [
+        "ed25519"
+      ]
+    },
+    "version": {}
+  },
+  "validators": [
+    {
+      "address": "022675C24A2CCB801CEA510EFB6D15386FA10DFC",
+      "pub_key": {
+        "type": "tendermint/PubKeyEd25519",
+        "value": "hzcUKkmOB7YPlMQvPuQrDkgpn5k2QvWbyDlNotn2RJE="
+      },
+      "power": "10",
+      "name": ""
+    }
+  ],
+  "app_hash": ""
+}
