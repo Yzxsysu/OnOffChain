@@ -5,8 +5,12 @@ import (
 	"log"
 )
 
-func (BCstate *BlockchainState) VValidate(s *[]SmallBankTransaction, v []uint16, ch chan bool) {
-	l := len(v)
+func (BCstate *BlockchainState) VValidate(s *[]SmallBankTransaction, v *[]uint16, ch chan bool) {
+	log.Println("VValidate:", *v)
+	l := len(*v)
+	if l == 0 {
+		return
+	}
 	var TxType uint8
 	//var I uint16
 	var From []byte
@@ -14,7 +18,7 @@ func (BCstate *BlockchainState) VValidate(s *[]SmallBankTransaction, v []uint16,
 	var Balance int
 
 	for i := 0; i < l; i++ {
-		tx := (*s)[v[i]]
+		tx := (*s)[(*v)[i]-1]
 		TxType = tx.T
 		//I = tx.I
 		From = tx.F

@@ -1,13 +1,14 @@
 package abci
 
 import (
+	"bytes"
 	"encoding/binary"
 	"encoding/json"
-	"fmt"
-	"github.com/gorilla/websocket"
 	abcicode "github.com/tendermint/tendermint/abci/example/code"
 	abcitypes "github.com/tendermint/tendermint/abci/types"
+	"io"
 	"log"
+	"net/http"
 	"net/url"
 	"onffchain/smallbankapplication/application"
 )
@@ -30,66 +31,89 @@ func NewSmallBankApplication(node *application.BlockchainState) *SmallBankApplic
 
 func (app *SmallBankApplication) BeginBlock(req abcitypes.RequestBeginBlock) abcitypes.ResponseBeginBlock {
 	//app.currentBatch = app.db.NewTransaction(true)
+	log.Println("BeginBlock")
 	return abcitypes.ResponseBeginBlock{}
 }
 
-var US url.URL
-var USV url.URL
-var OffChianURL url.URL
+var Ips []string
+var Ports []string
 
-func SendData(msg *[]byte, u url.URL) {
-	conn, _, err := websocket.DefaultDialer.Dial(u.String(), nil)
+func SendData(msg interface{}, ip string, port string, path string) {
+	u := url.URL{Scheme: "http", Host: ip + ":" + port, Path: path}
+	log.Println(u.String())
+	jsonData, err := json.Marshal(msg)
 	if err != nil {
-		fmt.Println("Dial error:", err)
-		return
+		log.Println("SendData func json err:", err)
 	}
-	// close conn
-	defer func(conn *websocket.Conn) {
-		err := conn.Close()
-		if err != nil {
-			fmt.Println("conn close error:", err)
-		}
-	}(conn)
+	req, err := http.NewRequest(http.MethodPost, u.String(), bytes.NewBuffer(jsonData))
+	if err != nil {
+		log.Println("SendData err:", err)
+	}
+	req.Header.Set("Content-Type", "application/json")
 
-	if err := conn.WriteMessage(websocket.BinaryMessage, *msg); err != nil {
-		//if err := conn.WriteMessage(1, []byte("今天。。。"));err != nil {
-		log.Println("Writeing error...", err)
-		return
+	client := http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		log.Println("resp err:", err)
 	}
-	return
+	defer func(Body io.ReadCloser) {
+		err := Body.Close()
+		if err != nil {
+			log.Println("resp.Body close err:", err)
+		}
+	}(resp.Body)
+
+	respData, err := io.ReadAll(resp.Body)
+	if err != nil {
+		log.Println("respData ReadAll err", err)
+	}
+	log.Println(string(respData))
 }
+
+var OffChainIp string
+var OffChainPort string
 
 // 当新的交易被添加到Tendermint Core时，它会要求应用程序进行检查(验证格式、签名等)，当返回0时才通过
 func (app SmallBankApplication) CheckTx(req abcitypes.RequestCheckTx) abcitypes.ResponseCheckTx {
 	// Leader execute and send the sub graph
 	//var events []abcitypes.Event
 	if app.Node.Leader {
-		Sub, SubV := app.Node.ResolveAndExecuteTx(&req.Tx)
-		mSub, err := json.Marshal(Sub)
+		Sub, SubV, ReceiveTx := app.Node.ResolveAndExecuteTx(&req.Tx)
+		/*mSub, err := json.Marshal(Sub)
 		if err != nil {
-			fmt.Println(err)
+			log.Println(err)
 		}
 		mSubV, err := json.Marshal(SubV)
 		if err != nil {
-			fmt.Println(err)
+			log.Println(err)
+		}*/
+		// send to the connected nodes
+		go SendData(Sub, OffChainIp, OffChainPort, "/S")
+		go SendData(SubV, OffChainIp, OffChainPort, "/SV")
+		go SendData(ReceiveTx, OffChainIp, OffChainPort, "/Tx")
+		for i, port := range Ports {
+			go SendData(Sub, Ips[i], port, "/S")
+			go SendData(SubV, Ips[i], port, "/SV")
 		}
-		// send to the websocket
-		go SendData(&mSub, US)
-		go SendData(&mSubV, USV)
-		go SendData(&req.Tx, OffChianURL)
 	}
-	return abcitypes.ResponseCheckTx{Code: abcicode.CodeTypeOK, GasUsed: 0}
+	return abcitypes.ResponseCheckTx{Code: abcicode.CodeTypeOK, GasUsed: 1}
 }
 
 // 这里我们创建了一个batch，它将存储block的交易。
 func (app *SmallBankApplication) DeliverTx(req abcitypes.RequestDeliverTx) abcitypes.ResponseDeliverTx {
 	if !app.Node.Leader {
-		ReceiveTx := make([]application.SmallBankTransaction, 0)
+		// one tx per deliver
+		log.Println("Going to DeliverTx")
+		ReceiveTx := application.ResolveTx(&req.Tx)
+		/*ReceiveTx := make([]application.SmallBankTransaction, 0)
 		err := json.Unmarshal(req.Tx, &ReceiveTx)
 		if err != nil {
 			log.Println(err)
 		}
+		log.Println(ReceiveTx)*/
 		app.Node.DValidate(&ReceiveTx)
+	} else {
+		log.Println("leader don't need to do other thing")
 	}
 	return abcitypes.ResponseDeliverTx{Code: abcicode.CodeTypeOK}
 }

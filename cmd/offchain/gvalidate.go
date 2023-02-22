@@ -7,8 +7,11 @@ import (
 	"strings"
 )
 
-func OValidate(s *[]SmallBankTransaction, GE [][]GraphEdge, group int, v chan map[string]AccountVersion) {
-	order, m := Dfs(GE, group)
+func OValidate(s *[]SmallBankTransaction, GE *[][]GraphEdge, group int, v chan map[string]AccountVersion) {
+	order, m := Dfs(*GE, group)
+
+	log.Println("OValidate:group", order, group)
+
 	lG := len(order)
 	version := make(map[string]AccountVersion)
 	var TxType uint8
@@ -17,11 +20,11 @@ func OValidate(s *[]SmallBankTransaction, GE [][]GraphEdge, group int, v chan ma
 	var To []byte
 	var Balance int
 	for i := lG - 1; i >= 0; i-- {
-		TxType = (*s)[order[i]].T
-		TxId = (*s)[order[i]].I
-		From = (*s)[order[i]].F
-		To = (*s)[order[i]].O
-		Balance = (*s)[order[i]].B
+		TxType = (*s)[order[i]-1].T
+		TxId = (*s)[order[i]-1].I
+		From = (*s)[order[i]-1].F
+		To = (*s)[order[i]-1].O
+		Balance = (*s)[order[i]-1].B
 		switch TxType {
 		case GetBalance:
 			OGetBalance(TxId, string(From), m, version)
@@ -39,6 +42,8 @@ func OValidate(s *[]SmallBankTransaction, GE [][]GraphEdge, group int, v chan ma
 			fmt.Println("T doesn't match")
 		}
 	}
+
+	log.Println("v <- version", version, group)
 	v <- version
 }
 

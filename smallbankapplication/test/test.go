@@ -6,36 +6,43 @@ import (
 	"time"
 )
 
-type Graph struct {
+type SortedGraph struct {
 	v       uint16
-	adj     [][]uint16
-	visited []bool
+	adj     map[uint16][]uint16
+	visited map[uint16]bool
 	order   []uint16
 }
 
-func NewGraph(v uint16) *Graph {
-	g := &Graph{
+func NewSortedGraph(v uint16) *SortedGraph {
+	g := &SortedGraph{
 		v:       v,
-		adj:     make([][]uint16, v),
-		visited: make([]bool, v),
+		adj:     make(map[uint16][]uint16),
+		visited: make(map[uint16]bool),
 	}
 	return g
 }
 
-func (g *Graph) AddEdge(s uint16, t uint16) {
+func (g *SortedGraph) AddEdge(s uint16, t uint16) {
+	g.visited[s] = false
+	g.visited[t] = false
 	g.adj[s] = append(g.adj[s], t)
 }
 
-func (g *Graph) TopoSortByDFS() []uint16 {
-	for i := 0; uint16(i) < g.v; i++ {
+func (g *SortedGraph) TopoSortByDFS() []uint16 {
+	/*for i := 0; uint16(i) < g.v; i++ {
 		if !g.visited[i] {
 			g.DFS(uint16(i))
+		}
+	}*/
+	for k, v := range g.visited {
+		if !v {
+			g.DFS(k)
 		}
 	}
 	return g.order
 }
 
-func (g *Graph) DFS(vertex uint16) {
+func (g *SortedGraph) DFS(vertex uint16) {
 	g.visited[vertex] = true
 	for _, v := range g.adj[vertex] {
 		if !g.visited[v] {
@@ -55,13 +62,14 @@ func write(ch chan bool) {
 }
 
 func main() {
-	g := NewGraph(6)
+	g := NewSortedGraph(6)
 	g.AddEdge(0, 1)
 	g.AddEdge(0, 2)
 	g.AddEdge(1, 3)
 	g.AddEdge(2, 3)
 	g.AddEdge(3, 4)
 	g.AddEdge(4, 5)
+	g.AddEdge(0, 100)
 	order := g.TopoSortByDFS()
 	fmt.Println(order)
 	ch := make(chan bool, 2)

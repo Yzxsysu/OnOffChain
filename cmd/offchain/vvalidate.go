@@ -5,19 +5,22 @@ import (
 	"log"
 )
 
-func OVValidate(s *[]SmallBankTransaction, u [][]uint16, group int, v chan map[string]AccountVersion) {
-
-	lG := len(u[group])
+func OVValidate(s *[]SmallBankTransaction, u *[][]uint16, group int, v chan map[string]AccountVersion) {
+	if len(*u) == 0 {
+		return
+	}
+	lG := len((*u)[group])
+	log.Println("OVValidate:", group)
 	version := make(map[string]AccountVersion)
 	var TxType uint8
 	var From []byte
 	var To []byte
 	var Balance int
 	for i := lG - 1; i >= 0; i-- {
-		TxType = (*s)[u[group][i]].T
-		From = (*s)[u[group][i]].F
-		To = (*s)[u[group][i]].O
-		Balance = (*s)[u[group][i]].B
+		TxType = (*s)[(*u)[group][i]-1].T
+		From = (*s)[(*u)[group][i]-1].F
+		To = (*s)[(*u)[group][i]-1].O
+		Balance = (*s)[(*u)[group][i]-1].B
 		switch TxType {
 		case GetBalance:
 			OVGetBalance(string(From), version)
@@ -35,6 +38,8 @@ func OVValidate(s *[]SmallBankTransaction, u [][]uint16, group int, v chan map[s
 			fmt.Println("T doesn't match")
 		}
 	}
+
+	log.Println("v <- version", version, group)
 	v <- version
 }
 

@@ -1,104 +1,107 @@
 package application
 
 import (
-	"fmt"
+	"log"
 )
 
-var MsgS chan [][]GraphEdge
-var MsgSV chan [][]uint16
-var MsgV1 chan map[string]AccountVersion
-var MsgV2 chan map[string]AccountVersion
-var MsgV3 chan map[string]AccountVersion
-var MsgV4 chan map[string]AccountVersion
-var MsgV5 chan map[string]AccountVersion
-var MsgV6 chan map[string]AccountVersion
+var bufferLength = 10000
+var MsgS = make(chan [][]GraphEdge, bufferLength)
+var MsgSV = make(chan [][]uint16, bufferLength)
+var MsgV1 = make(chan map[string]AccountVersion, bufferLength)
+var MsgV2 = make(chan map[string]AccountVersion, bufferLength)
+var MsgV3 = make(chan map[string]AccountVersion, bufferLength)
+var MsgV4 = make(chan map[string]AccountVersion, bufferLength)
+var MsgV5 = make(chan map[string]AccountVersion, bufferLength)
+var MsgV6 = make(chan map[string]AccountVersion, bufferLength)
+var Version = make(chan map[string]AccountVersion, bufferLength)
 
-var Version chan map[string]AccountVersion
-
-func (BCstate *BlockchainState) Validate(s *[]SmallBankTransaction, group int) {
-	GE := <-MsgS
-	u := <-MsgSV
-	v := u[group]
+func (BCstate *BlockchainState) Validate(s *[]SmallBankTransaction, GE *[][]GraphEdge, u *[][]uint16, group int) {
+	log.Println("Validate:", group)
+	if len(*u) == 0 {
+		log.Println("len(*u)", 0)
+		return
+	}
+	v := (*u)[group]
 	ch := make(chan bool, 2)
-	go BCstate.VValidate(s, v, ch)
+	go BCstate.VValidate(s, &v, ch)
 	go BCstate.GValidate(s, GE, group, Version, ch)
 	// go OffChainExecute
 	<-ch
 	<-ch
+	log.Println("Validate end", Group)
 }
 
 var SetNum string
 var Group int
 
 func (BCstate *BlockchainState) DValidate(s *[]SmallBankTransaction) {
-	if SetNum == "f" {
-		if Group == 1 {
-			go BCstate.Validate(s, 1)
-			v2 := <-MsgV2
-			v3 := <-MsgV3
-			v5 := <-MsgV5
-			v6 := <-MsgV6
-			v := <-Version
-			BCstate.MergeS(v, v2)
-			BCstate.MergeS(v, v3)
-			go BCstate.MergeSV(v5)
-			go BCstate.MergeSV(v6)
-		}
-		if Group == 2 {
-			go BCstate.Validate(s, 2)
-			v1 := <-MsgV1
-			v3 := <-MsgV3
-			v4 := <-MsgV4
-			v6 := <-MsgV6
-			v := <-Version
-			BCstate.MergeS(v, v1)
-			BCstate.MergeS(v, v3)
-			go BCstate.MergeSV(v4)
-			go BCstate.MergeSV(v6)
-		}
-		if Group == 3 {
-			go BCstate.Validate(s, 3)
-			v1 := <-MsgV1
-			v2 := <-MsgV2
-			v4 := <-MsgV4
-			v5 := <-MsgV5
-			v := <-Version
-			BCstate.MergeS(v, v1)
-			BCstate.MergeS(v, v2)
-			go BCstate.MergeSV(v4)
-			go BCstate.MergeSV(v5)
-		}
-	}
 	if SetNum == "2f" {
 		if Group == 1 {
-			go BCstate.Validate(s, 1)
-			go BCstate.Validate(s, 2)
-			v3 := <-MsgV3
-			v6 := <-MsgV6
-			v := <-Version
-			BCstate.MergeS(v, v3)
-			go BCstate.MergeSV(v6)
+			log.Println("DValidate:", Group)
+			GE := <-MsgS
+			log.Println("GE:", GE)
+			u := <-MsgSV
+			log.Println("u:", u)
+			go BCstate.Validate(s, &GE, &u, 1-1)
+			go BCstate.Validate(s, &GE, &u, 2-1)
+			go BCstate.MergeSV(<-MsgV6)
+			ver1 := <-Version
+			ver2 := <-Version
+			BCstate.MergeS2(ver1, ver2, <-MsgV3)
 		}
 		if Group == 2 {
-			go BCstate.Validate(s, 2)
-			go BCstate.Validate(s, 3)
-			v1 := <-MsgV1
-			v4 := <-MsgV4
-			v := <-Version
-			BCstate.MergeS(v, v1)
-			go BCstate.MergeSV(v4)
+			GE := <-MsgS
+			u := <-MsgSV
+			go BCstate.Validate(s, &GE, &u, 2-1)
+			go BCstate.Validate(s, &GE, &u, 3-1)
+			go BCstate.MergeSV(<-MsgV4)
+			ver1 := <-Version
+			ver2 := <-Version
+			BCstate.MergeS2(ver1, ver2, <-MsgV1)
 		}
 		if Group == 3 {
-			go BCstate.Validate(s, 1)
-			go BCstate.Validate(s, 3)
-			v2 := <-MsgV2
-			v5 := <-MsgV5
-			v := <-Version
-			BCstate.MergeS(v, v2)
-			go BCstate.MergeSV(v5)
+			GE := <-MsgS
+			u := <-MsgSV
+			go BCstate.Validate(s, &GE, &u, 1-1)
+			go BCstate.Validate(s, &GE, &u, 3-1)
+			go BCstate.MergeSV(<-MsgV5)
+			ver1 := <-Version
+			ver2 := <-Version
+			BCstate.MergeS2(ver1, ver2, <-MsgV2)
 		}
 	}
-
+	if SetNum == "f" {
+		if Group == 1 {
+			GE := <-MsgS
+			u := <-MsgSV
+			go BCstate.Validate(s, &GE, &u, 1-1)
+			go BCstate.MergeSV(<-MsgV5)
+			go BCstate.MergeSV(<-MsgV6)
+			v := <-Version
+			BCstate.MergeS(v, <-MsgV2)
+			BCstate.MergeS(v, <-MsgV3)
+		}
+		if Group == 2 {
+			GE := <-MsgS
+			u := <-MsgSV
+			go BCstate.Validate(s, &GE, &u, 2-1)
+			go BCstate.MergeSV(<-MsgV4)
+			go BCstate.MergeSV(<-MsgV6)
+			v := <-Version
+			BCstate.MergeS(v, <-MsgV1)
+			BCstate.MergeS(v, <-MsgV3)
+		}
+		if Group == 3 {
+			GE := <-MsgS
+			u := <-MsgSV
+			go BCstate.Validate(s, &GE, &u, 3-1)
+			go BCstate.MergeSV(<-MsgV4)
+			go BCstate.MergeSV(<-MsgV5)
+			v := <-Version
+			BCstate.MergeS(v, <-MsgV1)
+			BCstate.MergeS(v, <-MsgV2)
+		}
+	}
 }
 
 type AccountVersion struct {
@@ -113,26 +116,27 @@ func NewAccountVersion() AccountVersion {
 }
 
 func (BCstate *BlockchainState) MergeS(OriginV map[string]AccountVersion, NewV map[string]AccountVersion) {
+	log.Println("MergeS:", Group)
 	for key, value := range NewV {
 		_, err := OriginV[key]
 		if err != true {
 			OriginV[key] = value
 		}
 
-		if OriginV[key].SaveVersion < value.SaveVersion {
+		if OriginV[key].SaveVersion <= value.SaveVersion {
 			err := BCstate.SavingStore.Set([]byte(key), IntToBytes(value.Save))
 			if err != nil {
-				fmt.Println(err)
+				log.Println(err)
 			}
 			tempV := OriginV[key]
 			tempV.SaveVersion = value.SaveVersion
 			tempV.Save = value.Save
 			OriginV[key] = tempV
 		}
-		if OriginV[key].CheckVersion < value.CheckVersion {
+		if OriginV[key].CheckVersion <= value.CheckVersion {
 			err := BCstate.CheckingStore.Set([]byte(key), IntToBytes(value.Check))
 			if err != nil {
-				fmt.Println(err)
+				log.Println(err)
 			}
 			tempV := OriginV[key]
 			tempV.CheckVersion = value.CheckVersion
@@ -140,17 +144,79 @@ func (BCstate *BlockchainState) MergeS(OriginV map[string]AccountVersion, NewV m
 			OriginV[key] = tempV
 		}
 	}
+	log.Println("MergeS end")
+}
+
+func (BCstate *BlockchainState) MergeS2(OriginV map[string]AccountVersion, NewV1 map[string]AccountVersion, NewV2 map[string]AccountVersion) {
+	log.Println("MergeS2:", Group)
+	for key, value := range NewV1 {
+		_, err := OriginV[key]
+		if err != true {
+			OriginV[key] = value
+		}
+
+		if OriginV[key].SaveVersion <= value.SaveVersion {
+			err := BCstate.SavingStore.Set([]byte(key), IntToBytes(value.Save))
+			if err != nil {
+				log.Println(err)
+			}
+			tempV := OriginV[key]
+			tempV.SaveVersion = value.SaveVersion
+			tempV.Save = value.Save
+			OriginV[key] = tempV
+		}
+		if OriginV[key].CheckVersion <= value.CheckVersion {
+			err := BCstate.CheckingStore.Set([]byte(key), IntToBytes(value.Check))
+			if err != nil {
+				log.Println(err)
+			}
+			tempV := OriginV[key]
+			tempV.CheckVersion = value.CheckVersion
+			tempV.Check = value.Check
+			OriginV[key] = tempV
+		}
+	}
+	for key, value := range NewV2 {
+		_, err := OriginV[key]
+		if err != true {
+			OriginV[key] = value
+		}
+
+		if OriginV[key].SaveVersion <= value.SaveVersion {
+			err := BCstate.SavingStore.Set([]byte(key), IntToBytes(value.Save))
+			if err != nil {
+				log.Println(err)
+			}
+			tempV := OriginV[key]
+			tempV.SaveVersion = value.SaveVersion
+			tempV.Save = value.Save
+			OriginV[key] = tempV
+		}
+		if OriginV[key].CheckVersion <= value.CheckVersion {
+			err := BCstate.CheckingStore.Set([]byte(key), IntToBytes(value.Check))
+			if err != nil {
+				log.Println(err)
+			}
+			tempV := OriginV[key]
+			tempV.CheckVersion = value.CheckVersion
+			tempV.Check = value.Check
+			OriginV[key] = tempV
+		}
+	}
+	log.Println("MergeS2 end")
 }
 
 func (BCstate *BlockchainState) MergeSV(NewV map[string]AccountVersion) {
+	log.Println("MergeSV", Group)
 	for key, value := range NewV {
 		err := BCstate.SavingStore.Set([]byte(key), IntToBytes(value.Save))
 		if err != nil {
-			fmt.Println(err)
+			log.Println(err)
 		}
 		err = BCstate.CheckingStore.Set([]byte(key), IntToBytes(value.Check))
 		if err != nil {
-			fmt.Println(err)
+			log.Println(err)
 		}
 	}
+	log.Println("MergeSV end")
 }

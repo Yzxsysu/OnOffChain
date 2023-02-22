@@ -103,10 +103,6 @@ func NewBlockchainState(DBName BackendType, leader bool, dir string) (*Blockchai
 	}, err, err1
 }
 
-func (BCstate *BlockchainState) DeliverGraph() {
-
-}
-
 // CreateAccount can create account with saving balance and checking balance
 func (BCstate *BlockchainState) CreateAccount(AccountName string, SavingBalance int, CheckingBalance int) {
 	// Create two separate accounts for two DB
@@ -263,9 +259,10 @@ func (BCstate *BlockchainState) UpdateBalance(TxId uint16, A string, Balance int
 	result.CheckBool = append(result.CheckBool, true)
 	result.PreTxId = append(result.PreTxId, dataA.WrittenBy)
 
-	//result.SaveVersion = append(result.SaveVersion, 0)
+	result.SaveVersion = append(result.SaveVersion, dataA.SaveVersion)
 	result.CheckVersion = append(result.CheckVersion, dataA.CheckVersion)
 
+	// SaveVersion can not be nil, otherwise it will encounter error
 	dataA.SaveVersion = result.SaveVersion[0]
 	dataA.CheckVersion = result.CheckVersion[0] + 1
 
@@ -306,7 +303,7 @@ func (BCstate *BlockchainState) UpdateSaving(TxId uint16, A string, Balance int,
 	result.PreTxId = append(result.PreTxId, dataA.WrittenBy)
 
 	result.SaveVersion = append(result.SaveVersion, dataA.SaveVersion)
-	//result.CheckVersion = append(result.CheckVersion, 0)
+	result.CheckVersion = append(result.CheckVersion, dataA.CheckVersion)
 
 	dataA.SaveVersion = result.SaveVersion[0] + 1
 	dataA.CheckVersion = result.CheckVersion[0]
@@ -352,7 +349,7 @@ func (BCstate *BlockchainState) SendPayment(TxId uint16, A string, B string, Bal
 	result.SaveBool = append(result.SaveBool, false, false)
 	result.CheckBool = append(result.CheckBool, true, true)
 	result.PreTxId = append(result.PreTxId, dataA.WrittenBy, dataB.WrittenBy)
-	// result.SaveVersion = append(result.SaveVersion, dataA.SaveVersion, dataB.SaveVersion)     // 0 or next version
+	result.SaveVersion = append(result.SaveVersion, dataA.SaveVersion, dataB.SaveVersion)     // 0 or next version
 	result.CheckVersion = append(result.CheckVersion, dataA.CheckVersion, dataB.CheckVersion) // 0 or next version
 
 	dataA.SaveVersion = result.SaveVersion[0]

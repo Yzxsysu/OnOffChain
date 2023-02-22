@@ -1,10 +1,11 @@
 package application
 
 import (
-	"encoding/json"
+	"bytes"
 	"fmt"
 	"github.com/Workiva/go-datastructures/queue"
 	"log"
+	"strconv"
 )
 
 const (
@@ -15,19 +16,18 @@ const (
 	BalanceString string = "B"
 )
 
-func (BCstate *BlockchainState) ResolveAndExecuteTx(request *[]byte) ([][]GraphEdge, [][]uint16) {
-	// T=3,I=1,F=1,O=3,B=156>T=1,I=2,F=2,O=1,B=190"
-	/*txs := bytes.Split(request, []byte(">"))
+func ResolveTx(request *[]byte) []SmallBankTransaction {
+	txs := bytes.Split(*request, []byte(">"))
 	l := len(txs)
 	if l == 0 {
 		log.Println("the tx is nil")
-	}*/
-	ReceiveTx := make([]SmallBankTransaction, 0)
-	err := json.Unmarshal(*request, &ReceiveTx)
+	}
+	ReceiveTx := make([]SmallBankTransaction, l)
+	/*err := json.Unmarshal(*request, &ReceiveTx)
 	if err != nil {
 		log.Println(err)
-	}
-	/*for i, elements := range txs {
+	}*/
+	for i, elements := range txs {
 		var tx SmallBankTransaction
 		element := bytes.Split(elements, []byte(","))
 		for _, e := range element {
@@ -51,7 +51,47 @@ func (BCstate *BlockchainState) ResolveAndExecuteTx(request *[]byte) ([][]GraphE
 			}
 		}
 		ReceiveTx[i] = tx
+	}
+	return ReceiveTx
+}
+
+func (BCstate *BlockchainState) ResolveAndExecuteTx(request *[]byte) ([][]GraphEdge, [][]uint16, []SmallBankTransaction) {
+	// T=3,I=1,F=1,O=3,B=156>T=1,I=2,F=2,O=1,B=190"
+	txs := bytes.Split(*request, []byte(">"))
+	l := len(txs)
+	if l == 0 {
+		log.Println("the tx is nil")
+	}
+	ReceiveTx := make([]SmallBankTransaction, l)
+	/*err := json.Unmarshal(*request, &ReceiveTx)
+	if err != nil {
+		log.Println(err)
 	}*/
+	for i, elements := range txs {
+		var tx SmallBankTransaction
+		element := bytes.Split(elements, []byte(","))
+		for _, e := range element {
+			kv := bytes.Split(e, []byte("="))
+			switch string(kv[0]) {
+			case TxTypeString:
+				temp, _ := strconv.ParseUint(string(kv[1]), 10, 64)
+				tx.T = uint8(temp)
+			case TxIdString:
+				temp, _ := strconv.ParseUint(string(kv[1]), 10, 64)
+				tx.I = uint16(temp)
+			case FromString:
+				tx.F = make([]byte, len(kv[1]))
+				copy(tx.F, kv[1])
+			case ToString:
+				tx.O = make([]byte, len(kv[1]))
+				copy(tx.O, kv[1])
+			case BalanceString:
+				// temp_value := string(kv[1])
+				tx.B = BytesToInt(kv[1])
+			}
+		}
+		ReceiveTx[i] = tx
+	}
 
 	var TxType uint8
 	var TxId uint16
@@ -59,7 +99,6 @@ func (BCstate *BlockchainState) ResolveAndExecuteTx(request *[]byte) ([][]GraphE
 	var To []byte
 	var Balance int
 
-	l := len(ReceiveTx)
 	txResult := make(chan TxResult, l)
 
 	for i := 0; i < l; i++ {
@@ -87,10 +126,11 @@ func (BCstate *BlockchainState) ResolveAndExecuteTx(request *[]byte) ([][]GraphE
 			fmt.Println("T doesn't match")
 		}
 	}
-	l = len(txResult)
+
 	pq := queue.NewPriorityQueue(l, true)
-	visited := make([]bool, l)
-	Sub, SubV := CutGraph(GenerateGraph(txResult, pq, visited), pq, 3, visited)
+	visited := make([]bool, l+1)
+	Sub, SubV := CutGraph(GenerateGraph(txResult, pq, visited, l), pq, 3, visited)
+	close(txResult)
 	// need to send to on chain and other off chain
-	return Sub, SubV
+	return Sub, SubV, ReceiveTx
 }

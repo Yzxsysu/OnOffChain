@@ -38,28 +38,35 @@ type GraphEdge struct {
 
 type SortedGraph struct {
 	v       uint16
-	adj     [][]uint16
-	visited []bool
+	adj     map[uint16][]uint16
+	visited map[uint16]bool
 	order   []uint16
 }
 
 func NewSortedGraph(v uint16) *SortedGraph {
 	g := &SortedGraph{
 		v:       v,
-		adj:     make([][]uint16, v),
-		visited: make([]bool, v),
+		adj:     make(map[uint16][]uint16),
+		visited: make(map[uint16]bool),
 	}
 	return g
 }
 
 func (g *SortedGraph) AddEdge(s uint16, t uint16) {
+	g.visited[s] = false
+	g.visited[t] = false
 	g.adj[s] = append(g.adj[s], t)
 }
 
 func (g *SortedGraph) TopoSortByDFS() []uint16 {
-	for i := 0; uint16(i) < g.v; i++ {
+	/*for i := 0; uint16(i) < g.v; i++ {
 		if !g.visited[i] {
 			g.DFS(uint16(i))
+		}
+	}*/
+	for k, v := range g.visited {
+		if !v {
+			g.DFS(k)
 		}
 	}
 	return g.order
