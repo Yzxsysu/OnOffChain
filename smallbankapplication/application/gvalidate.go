@@ -73,9 +73,11 @@ func (BCstate *BlockchainState) GValidate(s *[]SmallBankTransaction, GE *[][]Gra
 
 func (BCstate *BlockchainState) GGetBalance(TxId uint16, A string, m map[uint16]string, version map[string]AccountVersion) {
 	// don't need to modify the state of BlockchainState
+	AddComplexity(ByteLen, CycleNum)
 }
 
 func (BCstate *BlockchainState) GAmalgamate(TxId uint16, A string, B string, m map[uint16]string, version map[string]AccountVersion) {
+	AddComplexity(ByteLen, CycleNum)
 	var SaveInt int
 	var CheckInt int
 
@@ -178,6 +180,7 @@ func (BCstate *BlockchainState) GAmalgamate(TxId uint16, A string, B string, m m
 }
 
 func (BCstate *BlockchainState) GUpdateBalance(TxId uint16, A string, Balance int, m map[uint16]string, version map[string]AccountVersion) {
+	AddComplexity(ByteLen, CycleNum)
 	var name string
 	var CheckVersion string
 	var ConsistentCheckValue string
@@ -244,6 +247,7 @@ func (BCstate *BlockchainState) GUpdateBalance(TxId uint16, A string, Balance in
 }
 
 func (BCstate *BlockchainState) GUpdateSaving(TxId uint16, A string, Balance int, m map[uint16]string, version map[string]AccountVersion) {
+	AddComplexity(ByteLen, CycleNum)
 	var name string
 	var SaveVersion string
 	var ConsistentSaveValue string
@@ -307,6 +311,7 @@ func (BCstate *BlockchainState) GUpdateSaving(TxId uint16, A string, Balance int
 }
 
 func (BCstate *BlockchainState) GSendPayment(TxId uint16, A string, B string, Balance int, m map[uint16]string, version map[string]AccountVersion) {
+	AddComplexity(ByteLen, CycleNum)
 	var name string
 	var CheckVersion string
 	var ConsistentCheckValue string
@@ -410,6 +415,7 @@ func (BCstate *BlockchainState) GSendPayment(TxId uint16, A string, B string, Ba
 }
 
 func (BCstate *BlockchainState) GWriteCheck(TxId uint16, A string, Balance int, m map[uint16]string, version map[string]AccountVersion) {
+	AddComplexity(ByteLen, CycleNum)
 	var SaveInt int
 	var CheckInt int
 

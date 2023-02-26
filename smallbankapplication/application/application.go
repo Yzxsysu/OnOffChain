@@ -8,6 +8,11 @@ import (
 
 type BackendType string
 
+var (
+	ByteLen  int
+	CycleNum int
+)
+
 // These are valid backend types.
 const (
 	// GoLevelDBBackend represents goleveldb (github.com/syndtr/goleveldb - most
@@ -125,9 +130,9 @@ func (BCstate *BlockchainState) GetBalance(TxId uint16, A string, txResult chan<
 	// read only
 	// lock the account
 	BCstate.AccountLock[A].lock.RLock()
+	AddComplexity(ByteLen, CycleNum)
 	// use defer to unlock
 	defer BCstate.AccountLock[A].lock.RUnlock()
-
 	// construct account dataA
 	var dataA AccountData
 	var result TxResult
@@ -178,9 +183,9 @@ func (BCstate *BlockchainState) GetBalance(TxId uint16, A string, txResult chan<
 func (BCstate *BlockchainState) Amalgamate(TxId uint16, A string, B string, txResult chan<- TxResult) {
 	BCstate.AccountLock[A].lock.Lock()
 	BCstate.AccountLock[B].lock.Lock()
+	AddComplexity(ByteLen, CycleNum)
 	defer BCstate.AccountLock[A].lock.Unlock()
 	defer BCstate.AccountLock[B].lock.Unlock()
-
 	var dataA AccountData
 	var dataB AccountData
 	var result TxResult
@@ -242,6 +247,7 @@ func (BCstate *BlockchainState) Amalgamate(TxId uint16, A string, B string, txRe
 
 func (BCstate *BlockchainState) UpdateBalance(TxId uint16, A string, Balance int, txResult chan<- TxResult) {
 	BCstate.AccountLock[A].lock.Lock()
+	AddComplexity(ByteLen, CycleNum)
 	defer BCstate.AccountLock[A].lock.Unlock()
 
 	var dataA AccountData
@@ -285,6 +291,7 @@ func (BCstate *BlockchainState) UpdateBalance(TxId uint16, A string, Balance int
 
 func (BCstate *BlockchainState) UpdateSaving(TxId uint16, A string, Balance int, txResult chan<- TxResult) {
 	BCstate.AccountLock[A].lock.Lock()
+	AddComplexity(ByteLen, CycleNum)
 	defer BCstate.AccountLock[A].lock.Unlock()
 
 	var dataA AccountData
@@ -328,6 +335,7 @@ func (BCstate *BlockchainState) UpdateSaving(TxId uint16, A string, Balance int,
 func (BCstate *BlockchainState) SendPayment(TxId uint16, A string, B string, Balance int, txResult chan<- TxResult) {
 	BCstate.AccountLock[A].lock.Lock()
 	BCstate.AccountLock[B].lock.Lock()
+	AddComplexity(ByteLen, CycleNum)
 	defer BCstate.AccountLock[A].lock.Unlock()
 	defer BCstate.AccountLock[B].lock.Unlock()
 
@@ -397,6 +405,7 @@ func (BCstate *BlockchainState) SendPayment(TxId uint16, A string, B string, Bal
 
 func (BCstate *BlockchainState) WriteCheck(TxId uint16, A string, Balance int, txResult chan<- TxResult) {
 	BCstate.AccountLock[A].lock.Lock()
+	AddComplexity(ByteLen, CycleNum)
 	defer BCstate.AccountLock[A].lock.Unlock()
 
 	var dataA AccountData

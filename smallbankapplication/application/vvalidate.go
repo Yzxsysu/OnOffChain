@@ -45,10 +45,12 @@ func (BCstate *BlockchainState) VValidate(s *[]SmallBankTransaction, v *[]uint16
 }
 
 func (BCstate *BlockchainState) VGetBalance(A string) {
+	AddComplexity(ByteLen, CycleNum)
 	// don't need to modify the state of BlockchainState
 }
 
 func (BCstate *BlockchainState) VAmalgamate(A string, B string) {
+	AddComplexity(ByteLen, CycleNum)
 	Save, err := BCstate.SavingStore.Get([]byte(A))
 	if err != nil {
 		log.Println(err)
@@ -74,6 +76,7 @@ func (BCstate *BlockchainState) VAmalgamate(A string, B string) {
 }
 
 func (BCstate *BlockchainState) VUpdateBalance(A string, Balance int) {
+	AddComplexity(ByteLen, CycleNum)
 	Check, err := BCstate.CheckingStore.Get([]byte(A))
 	if err != nil {
 		log.Println(err)
@@ -102,6 +105,7 @@ func (BCstate *BlockchainState) VUpdateSaving(A string, Balance int) {
 }
 
 func (BCstate *BlockchainState) VSendPayment(A string, B string, Balance int) {
+	AddComplexity(ByteLen, CycleNum)
 	CheckA, err := BCstate.CheckingStore.Get([]byte(A))
 	if err != nil {
 		log.Println(err)
@@ -126,6 +130,7 @@ func (BCstate *BlockchainState) VSendPayment(A string, B string, Balance int) {
 }
 
 func (BCstate *BlockchainState) VWriteCheck(A string, Balance int) {
+	AddComplexity(ByteLen, CycleNum)
 	Save, err := BCstate.SavingStore.Get([]byte(A))
 	if err != nil {
 		log.Println(err)

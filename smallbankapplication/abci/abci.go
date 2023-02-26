@@ -79,15 +79,7 @@ func (app SmallBankApplication) CheckTx(req abcitypes.RequestCheckTx) abcitypes.
 	//var events []abcitypes.Event
 	if app.Node.Leader {
 		Sub, SubV, ReceiveTx := app.Node.ResolveAndExecuteTx(&req.Tx)
-		/*mSub, err := json.Marshal(Sub)
-		if err != nil {
-			log.Println(err)
-		}
-		mSubV, err := json.Marshal(SubV)
-		if err != nil {
-			log.Println(err)
-		}*/
-		// send to the connected nodes
+
 		go SendData(Sub, OffChainIp, OffChainPort, "/S")
 		go SendData(SubV, OffChainIp, OffChainPort, "/SV")
 		go SendData(ReceiveTx, OffChainIp, OffChainPort, "/Tx")
@@ -105,12 +97,6 @@ func (app *SmallBankApplication) DeliverTx(req abcitypes.RequestDeliverTx) abcit
 		// one tx per deliver
 		log.Println("Going to DeliverTx")
 		ReceiveTx := application.ResolveTx(&req.Tx)
-		/*ReceiveTx := make([]application.SmallBankTransaction, 0)
-		err := json.Unmarshal(req.Tx, &ReceiveTx)
-		if err != nil {
-			log.Println(err)
-		}
-		log.Println(ReceiveTx)*/
 		app.Node.DValidate(&ReceiveTx)
 	} else {
 		log.Println("leader don't need to do other thing")
