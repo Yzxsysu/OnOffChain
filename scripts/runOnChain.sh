@@ -11,7 +11,7 @@ rm -rf $TM_HOME
 mkdir -p $TM_HOME
 mkdir -p $LOG_DIR
 
-cp -r /home/WorkPlace/github.com/Yzxsysu/OnOffChain/config/* $TM_HOME
+cp -r /home/WorkPlace/github.com/Yzxsysu/serialsmallbankapplication/config/* $TM_HOME
 echo "configs generated"
 
 pkill -9 chain
