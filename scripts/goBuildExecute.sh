@@ -1,5 +1,5 @@
 GOSRC=/home/WorkPlace
-ROOT=$GOSRC/github.com/Yzxsysu/OnOffChain
+ROOT=$GOSRC/github.com/Yzxsysu/onoffchain
 
 mkdir -p build
 

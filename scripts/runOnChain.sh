@@ -1,17 +1,17 @@
 GOSRC=/home/WorkPlace
 TEST_SCENE="OnChain"
 TM_HOME="/home/.tendermint"
-WORKSPACE="$GOSRC/github.com/Yzxsysu/OnOffChain"
+WORKSPACE="$GOSRC/github.com/Yzxsysu/onoffchain"
 CURRENT_DATE=`date +"%Y-%m-%d-%H-%M"`
 LOG_DIR="$WORKSPACE/tmplog/$TEST_SCENE-$CURRENT_DATE"
-DURATION=60
+DURATION=120
 
 rm -rf $TM_HOME
 
 mkdir -p $TM_HOME
 mkdir -p $LOG_DIR
 
-cp -r /home/WorkPlace/github.com/Yzxsysu/serialsmallbankapplication/config/* $TM_HOME
+cp -r /home/WorkPlace/github.com/Yzxsysu/onoffchain/config/* $TM_HOME
 echo "configs generated"
 
 pkill -9 chain

@@ -5,11 +5,13 @@ import (
 	"net/http"
 	"onffchain/smallbankapplication/application"
 	"strconv"
+	"time"
 )
 
 // tx format: 127.0.0.1:20057/broadcast_tx_commit?tx="T=3,I=1,F=1,O=3,B=156>T=1,I=2,F=2,O=1,B=190"
 func main() {
 	for {
+		time.Sleep(time.Millisecond * 100)
 		var err error
 		txs := application.GenerateTx(1000, 1000, 1)
 

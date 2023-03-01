@@ -4,7 +4,7 @@ import (
 	"log"
 )
 
-var bufferLength = 10000
+var bufferLength = 1000
 var MsgS = make(chan [][]GraphEdge, bufferLength)
 var MsgSV = make(chan [][]uint16, bufferLength)
 var MsgV1 = make(chan map[string]AccountVersion, bufferLength)

@@ -16,6 +16,7 @@ import (
 	"os"
 	"os/signal"
 	"path/filepath"
+	"runtime"
 	"strconv"
 	"strings"
 	"syscall"
@@ -51,6 +52,9 @@ func init() {
 func main() {
 	// Parse command-line arguments
 	flag.Parse()
+	// Set the core num
+	runtime.GOMAXPROCS(int(coreNum))
+
 	application.SetNum = SetNum
 	application.Group = int(group)
 	smallbankapplication.Ips = strings.Split(webIp, ",")
@@ -106,10 +110,10 @@ func main() {
 	}
 	defer func() {
 		if err := db.SavingStore.Close(); err != nil {
-			log.Fatalf("Closing database: %v", err)
+			log.Fatalf("Closing SavingStore database: %v", err)
 		}
 		if err := db.CheckingStore.Close(); err != nil {
-			log.Fatalf("Closing database: %v", err)
+			log.Fatalf("Closing Checkingstore database: %v", err)
 		}
 	}()
 	if isLeader == "true" {
@@ -135,7 +139,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("Creating node: %v", err)
 	}
-	//go Subscribe(leaderIp)
+
 	err = node.Start()
 	if err != nil {
 		log.Fatalf("Starting node: %v", err)

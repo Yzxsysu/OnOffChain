@@ -67,8 +67,8 @@ func (BCstate *BlockchainState) GValidate(s *[]SmallBankTransaction, GE *[][]Gra
 			fmt.Println("T doesn't match")
 		}
 	}
-	ch <- true
 	v <- version
+	ch <- true
 }
 
 func (BCstate *BlockchainState) GGetBalance(TxId uint16, A string, m map[uint16]string, version map[string]AccountVersion) {
