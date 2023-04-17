@@ -15,12 +15,14 @@ func Subscribe(ip string) {
 	if err != nil {
 		log.Fatal("ListenAndServe", err.Error())
 	}
+	return
 }
 
 func WSHandlerS(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "POST" {
 		// Receive msg
 		body, err := io.ReadAll(r.Body)
+		w.Header().Set("Connection", "keep-alive")
 		if err != nil {
 			http.Error(w, "Error reading request body", http.StatusInternalServerError)
 		}
@@ -45,6 +47,7 @@ func WSHandlerSV(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "POST" {
 		// Receive msg
 		body, err := io.ReadAll(r.Body)
+		w.Header().Set("Connection", "keep-alive")
 		if err != nil {
 			http.Error(w, "Error reading request body", http.StatusInternalServerError)
 		}
@@ -69,6 +72,7 @@ func WSHandler1(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "POST" {
 		// Receive msg
 		body, err := io.ReadAll(r.Body)
+		w.Header().Set("Connection", "keep-alive")
 		if err != nil {
 			http.Error(w, "Error reading request body", http.StatusInternalServerError)
 		}
@@ -93,6 +97,7 @@ func WSHandler2(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "POST" {
 		// Receive msg
 		body, err := io.ReadAll(r.Body)
+		w.Header().Set("Connection", "keep-alive")
 		if err != nil {
 			http.Error(w, "Error reading request body", http.StatusInternalServerError)
 		}
@@ -117,6 +122,7 @@ func WSHandler3(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "POST" {
 		// Receive msg
 		body, err := io.ReadAll(r.Body)
+		w.Header().Set("Connection", "keep-alive")
 		if err != nil {
 			http.Error(w, "Error reading request body", http.StatusInternalServerError)
 		}
@@ -141,6 +147,7 @@ func WSHandler4(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "POST" {
 		// Receive msg
 		body, err := io.ReadAll(r.Body)
+		w.Header().Set("Connection", "keep-alive")
 		if err != nil {
 			http.Error(w, "Error reading request body", http.StatusInternalServerError)
 		}
@@ -165,6 +172,7 @@ func WSHandler5(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "POST" {
 		// Receive msg
 		body, err := io.ReadAll(r.Body)
+		w.Header().Set("Connection", "keep-alive")
 		if err != nil {
 			http.Error(w, "Error reading request body", http.StatusInternalServerError)
 		}
@@ -189,6 +197,7 @@ func WSHandler6(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "POST" {
 		// Receive msg
 		body, err := io.ReadAll(r.Body)
+		w.Header().Set("Connection", "keep-alive")
 		if err != nil {
 			http.Error(w, "Error reading request body", http.StatusInternalServerError)
 		}

@@ -27,6 +27,7 @@ func SendData(msg interface{}, ip string, port string, path string) {
 		log.Println("SendData func json err:", err)
 	}
 	req, err := http.NewRequest(http.MethodPost, u.String(), bytes.NewBuffer(jsonData))
+	req.Header.Set("Connection", "keep-alive")
 	if err != nil {
 		log.Println("SendData err:", err)
 	}
@@ -55,6 +56,7 @@ func WSHandlerTx(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "POST" {
 		// Receive msg
 		body, err := io.ReadAll(r.Body)
+		w.Header().Set("Connection", "keep-alive")
 		if err != nil {
 			http.Error(w, "Error reading request body", http.StatusInternalServerError)
 		}
@@ -79,6 +81,7 @@ func WSHandlerS(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "POST" {
 		// Receive msg
 		body, err := io.ReadAll(r.Body)
+		w.Header().Set("Connection", "keep-alive")
 		if err != nil {
 			http.Error(w, "Error reading request body", http.StatusInternalServerError)
 		}
@@ -103,6 +106,7 @@ func WSHandlerSV(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "POST" {
 		// Receive msg
 		body, err := io.ReadAll(r.Body)
+		w.Header().Set("Connection", "keep-alive")
 		if err != nil {
 			http.Error(w, "Error reading request body", http.StatusInternalServerError)
 		}

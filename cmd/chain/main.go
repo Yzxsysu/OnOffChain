@@ -11,6 +11,7 @@ import (
 	"github.com/tendermint/tendermint/types"
 	"log"
 	"net/http"
+	_ "net/http/pprof"
 	smallbankapplication "onffchain/smallbankapplication/abci"
 	"onffchain/smallbankapplication/application"
 	"os"
@@ -52,6 +53,9 @@ func init() {
 func main() {
 	// Parse command-line arguments
 	flag.Parse()
+	go func() {
+		http.ListenAndServe(":6061", nil)
+	}()
 	// Set the core num
 	runtime.GOMAXPROCS(int(coreNum))
 

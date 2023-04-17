@@ -50,7 +50,7 @@ func SendData(msg interface{}, ip string, port string, path string) {
 		log.Println("SendData err:", err)
 	}
 	req.Header.Set("Content-Type", "application/json")
-
+	req.Header.Set("Connection", "keep-alive")
 	client := http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
