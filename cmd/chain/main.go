@@ -11,7 +11,6 @@ import (
 	"github.com/tendermint/tendermint/types"
 	"log"
 	"net/http"
-	_ "net/http/pprof"
 	smallbankapplication "onffchain/smallbankapplication/abci"
 	"onffchain/smallbankapplication/application"
 	"os"
@@ -36,26 +35,28 @@ var subscribeIp string
 func init() {
 	flag.StringVar(&homeDir, "home", "", "Path to the tendermint config directory (if empty, uses $HOME/.tendermint)")
 	flag.StringVar(&isLeader, "leader", "false", "Is it a leader (default: false)")
-	flag.StringVar(&leaderIp, "leaderIp", "127.0.0.1:20057", "Let replica subscribe the websocket")
+	flag.StringVar(&leaderIp, "leaderIp", "172.17.0.3:26657", "Let replica subscribe the websocket")
 	flag.UintVar(&accountNum, "accountNum", 1000, "The account num of the SmallBank")
 	flag.UintVar(&groupNum, "groupNum", 3, "the total number of group")
-	flag.StringVar(&OffChainIp, "OffChainIp", "127.0.0.1", "Let replica subscribe the websocket")
+	flag.StringVar(&OffChainIp, "OffChainIp", "172.17.0.100", "Let replica subscribe the websocket")
 	flag.StringVar(&OffChainPort, "OffChainPort", "8090", "Let replica subscribe the websocket")
 	flag.UintVar(&group, "group", 1, "The group that the node belongs to")
 	flag.UintVar(&coreNum, "coreNum", 8, "control the num of cpu's cores")
 	// send message port sends the leader's graphs to validators, begin with 1
-	flag.StringVar(&webIp, "webIp", "127.0.0.1,127.0.0.1,127.0.0.1", "send message websocket ip")
+	flag.StringVar(&webIp, "webIp", "172.17.0.3,172.17.0.4,172.17.0.5", "send message websocket ip")
 	flag.StringVar(&webPort, "webPort", "10157,10257,10357", "send message websocket ports")
 	flag.StringVar(&SetNum, "SetNum", "2f", "Group Num")
 	flag.StringVar(&subscribeIp, "subscribeIp", "", "the replica that listens and serves ip")
 }
 
 func main() {
-	// Parse command-line arguments
+	//go func() {
+	//	err := http.ListenAndServe(":8003", nil)
+	//	if err != nil {
+	//		return
+	//	}
+	//}()
 	flag.Parse()
-	go func() {
-		http.ListenAndServe(":6061", nil)
-	}()
 	// Set the core num
 	runtime.GOMAXPROCS(int(coreNum))
 
@@ -78,7 +79,6 @@ func main() {
 	}
 	// Set default path and arguments
 	config := cfg.DefaultConfig()
-
 	// Set root(the location of tendermint node)
 	config.SetRoot(homeDir)
 

@@ -20,37 +20,56 @@ func Subscribe(ip string) {
 
 func SendData(msg interface{}, ip string, port string, path string) {
 	u := url.URL{Scheme: "http", Host: ip + ":" + port, Path: path}
-	log.Println(u.String())
-	log.Println(msg, ip, port, path)
 	jsonData, err := json.Marshal(msg)
 	if err != nil {
 		log.Println("SendData func json err:", err)
 	}
 	req, err := http.NewRequest(http.MethodPost, u.String(), bytes.NewBuffer(jsonData))
-	req.Header.Set("Connection", "keep-alive")
 	if err != nil {
 		log.Println("SendData err:", err)
 	}
 	req.Header.Set("Content-Type", "application/json")
-
+	req.Header.Set("Connection", "keep-alive")
 	client := http.Client{}
-	resp, err := client.Do(req)
+	_, err = client.Do(req)
 	if err != nil {
-		log.Println("resp err:", resp)
+		log.Println("resp err:", err)
 	}
-	defer func(Body io.ReadCloser) {
-		err := Body.Close()
-		if err != nil {
-			log.Println("resp.Body close err:", err)
-		}
-	}(resp.Body)
-
-	respData, err := io.ReadAll(resp.Body)
-	if err != nil {
-		log.Println("respData ReadAll err", err)
-	}
-	log.Println(string(respData))
 }
+
+//func SendData(msg interface{}, ip string, port string, path string) {
+//	u := url.URL{Scheme: "http", Host: ip + ":" + port, Path: path}
+//	log.Println(u.String())
+//	log.Println(msg, ip, port, path)
+//	jsonData, err := json.Marshal(msg)
+//	if err != nil {
+//		log.Println("SendData func json err:", err)
+//	}
+//	req, err := http.NewRequest(http.MethodPost, u.String(), bytes.NewBuffer(jsonData))
+//	req.Header.Set("Connection", "keep-alive")
+//	if err != nil {
+//		log.Println("SendData err:", err)
+//	}
+//	req.Header.Set("Content-Type", "application/json")
+//
+//	client := http.Client{}
+//	resp, err := client.Do(req)
+//	if err != nil {
+//		log.Println("resp err:", resp)
+//	}
+//	defer func(Body io.ReadCloser) {
+//		err := Body.Close()
+//		if err != nil {
+//			log.Println("resp.Body close err:", err)
+//		}
+//	}(resp.Body)
+//
+//	respData, err := io.ReadAll(resp.Body)
+//	if err != nil {
+//		log.Println("respData ReadAll err", err)
+//	}
+//	log.Println(string(respData))
+//}
 
 func WSHandlerTx(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "POST" {

@@ -1,0 +1,11 @@
+{
+  "address": "DA765CB701270FEB6D02702D2E14B446D5E44F5D",
+  "pub_key": {
+    "type": "tendermint/PubKeyEd25519",
+    "value": "yLeWoApKICDt3u9a/UEpN5/CpLlAf+xYA8dZGOiTA7Q="
+  },
+  "priv_key": {
+    "type": "tendermint/PrivKeyEd25519",
+    "value": "sHB7TlTWBot/MQvQjFG369TeA0qxRgAQttV7/Y8TNtDIt5agCkogIO3e71r9QSk3n8KkuUB/7FgDx1kY6JMDtA=="
+  }
+}

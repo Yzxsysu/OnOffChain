@@ -126,8 +126,8 @@ cors-allowed-methods = ["HEAD", "GET", "POST", ]
 cors-allowed-headers = ["Origin", "Accept", "Content-Type", "X-Requested-With", "X-Server-Time", ]
 
 # Activate unsafe RPC commands like /dial-seeds and /unsafe-flush-mempool
-unsafe = false
-
+# unsafe = false
+ unsafe = true
 # Maximum number of simultaneous connections (including WebSocket).
 # If you want to accept a larger number than the default, make sure
 # you increase your OS limits.
@@ -261,7 +261,7 @@ flush-throttle-timeout = "100ms"
 
 # Maximum size of a message packet payload, in bytes
 # TODO: Remove once MConnConnection is removed.
-max-packet-msg-payload-size = 1400
+# max-packet-msg-payload-size = 1400
 
 # Rate at which packets can be sent, in bytes/second
 # TODO: Remove once MConnConnection is removed.

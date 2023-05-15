@@ -4,7 +4,6 @@ import (
 	"flag"
 	"log"
 	"net/http"
-	_ "net/http/pprof"
 	"os"
 	"os/signal"
 	"strings"
@@ -43,9 +42,41 @@ func init() {
 
 // 监听proposal的Sub和SubV即可
 func main() {
-	go func() {
-		http.ListenAndServe(":6060", nil)
-	}()
+	//f, err := os.Create("offChainCpu.prof")
+	//if err != nil {
+	//	_ = fmt.Errorf("could not create CPU profile: ", err)
+	//}
+	//if err := pprof.StartCPUProfile(f); err != nil {
+	//	_ = fmt.Errorf("could not start CPU profile: ", err)
+	//}
+	////runtime.GC()
+	//defer pprof.StopCPUProfile()
+	//
+	//f1, err := os.Create("offChainMem.prof")
+	//if err != nil {
+	//	_ = fmt.Errorf("could not create memory profile: ", err)
+	//}
+	////runtime.GC()
+	//if err := pprof.WriteHeapProfile(f1); err != nil {
+	//	fmt.Errorf("could not write memory profile: ", err)
+	//}
+	//f1.Close()
+	//
+	//f2, err := os.Create("offChainGoroutine.prof")
+	//if err != nil {
+	//	_ = fmt.Errorf("could not create goroutine profile: ", err)
+	//}
+	////runtime.GC()
+	//if gProf := pprof.Lookup("goroutine"); gProf == nil {
+	//	fmt.Errorf("could not write goroutine: ")
+	//} else {
+	//	gProf.WriteTo(f2, 0)
+	//}
+	//f2.Close()
+
+	//go func() {
+	//	http.ListenAndServe(":6060", nil)
+	//}()
 	flag.Parse()
 	groupIp1, groupIp2, groupIp3 = SplitToThree(webIp)
 	groupPort1, groupPort2, groupPort3 = SplitToThree(webPort)
