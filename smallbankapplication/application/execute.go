@@ -107,7 +107,7 @@ func GenerateGraph(txResult <-chan TxResult, pq *queue.PriorityQueue, visited []
 			}
 		}
 	}
-	log.Println(m)
+	//log.Println(m)
 	return m
 	//for t := range txResult {
 	//	num := len(t.AccountName)

@@ -96,5 +96,6 @@ func main() {
 			fmt.Println(err)
 		}*/
 		time.Sleep(time.Millisecond * 1000)
+		time.Sleep(time.Millisecond * 500)
 	}
 }

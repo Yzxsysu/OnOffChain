@@ -6,7 +6,6 @@ import (
 	"encoding/json"
 	abcicode "github.com/tendermint/tendermint/abci/example/code"
 	abcitypes "github.com/tendermint/tendermint/abci/types"
-	"io"
 	"log"
 	"net/http"
 	"net/url"
@@ -40,7 +39,6 @@ var Ports []string
 
 func SendData(msg interface{}, ip string, port string, path string) {
 	u := url.URL{Scheme: "http", Host: ip + ":" + port, Path: path}
-	log.Println(u.String())
 	jsonData, err := json.Marshal(msg)
 	if err != nil {
 		log.Println("SendData func json err:", err)
@@ -52,22 +50,10 @@ func SendData(msg interface{}, ip string, port string, path string) {
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Connection", "keep-alive")
 	client := http.Client{}
-	resp, err := client.Do(req)
+	_, err = client.Do(req)
 	if err != nil {
 		log.Println("resp err:", err)
 	}
-	defer func(Body io.ReadCloser) {
-		err := Body.Close()
-		if err != nil {
-			log.Println("resp.Body close err:", err)
-		}
-	}(resp.Body)
-
-	respData, err := io.ReadAll(resp.Body)
-	if err != nil {
-		log.Println("respData ReadAll err", err)
-	}
-	log.Println(string(respData))
 }
 
 var OffChainIp string
@@ -78,8 +64,8 @@ func (app SmallBankApplication) CheckTx(req abcitypes.RequestCheckTx) abcitypes.
 	// Leader execute and send the sub graph
 	//var events []abcitypes.Event
 	if app.Node.Leader {
-		Sub, SubV, ReceiveTx := app.Node.ResolveAndExecuteTx(&req.Tx)
-
+		//Sub, SubV, ReceiveTx := app.Node.ResolveAndExecuteTx(&req.Tx)
+		Sub, SubV, ReceiveTx := app.Node.ResolveAndExecuteTxWithSyncMap(&req.Tx)
 		go SendData(Sub, OffChainIp, OffChainPort, "/S")
 		go SendData(SubV, OffChainIp, OffChainPort, "/SV")
 		go SendData(ReceiveTx, OffChainIp, OffChainPort, "/Tx")
@@ -94,12 +80,8 @@ func (app SmallBankApplication) CheckTx(req abcitypes.RequestCheckTx) abcitypes.
 // 这里我们创建了一个batch，它将存储block的交易。
 func (app *SmallBankApplication) DeliverTx(req abcitypes.RequestDeliverTx) abcitypes.ResponseDeliverTx {
 	if !app.Node.Leader {
-		// one tx per deliver
-		log.Println("Going to DeliverTx")
 		ReceiveTx := application.ResolveTx(&req.Tx)
 		app.Node.DValidate(&ReceiveTx)
-	} else {
-		log.Println("leader don't need to do other thing")
 	}
 	return abcitypes.ResponseDeliverTx{Code: abcicode.CodeTypeOK}
 }
@@ -107,7 +89,11 @@ func (app *SmallBankApplication) DeliverTx(req abcitypes.RequestDeliverTx) abcit
 func (app *SmallBankApplication) Commit() abcitypes.ResponseCommit {
 	// 往数据库中提交事务，当 Tendermint core 提交区块时，会调用这个函数
 	/*app.currentBatch.Commit()*/
+<<<<<<< HEAD
 	
+=======
+
+>>>>>>> 403921cdd8cfaa0d9cec24b5a6990a454b3472a9
 	appHash := make([]byte, 8)
 	binary.PutVarint(appHash, int64(app.Node.Height))
 	app.Node.AppHash = appHash
