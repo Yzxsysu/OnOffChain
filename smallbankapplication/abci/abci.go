@@ -107,6 +107,7 @@ func (app *SmallBankApplication) DeliverTx(req abcitypes.RequestDeliverTx) abcit
 func (app *SmallBankApplication) Commit() abcitypes.ResponseCommit {
 	// 往数据库中提交事务，当 Tendermint core 提交区块时，会调用这个函数
 	/*app.currentBatch.Commit()*/
+	
 	appHash := make([]byte, 8)
 	binary.PutVarint(appHash, int64(app.Node.Height))
 	app.Node.AppHash = appHash

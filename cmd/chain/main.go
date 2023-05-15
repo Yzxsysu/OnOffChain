@@ -51,11 +51,13 @@ func init() {
 }
 
 func main() {
-	// Parse command-line arguments
-	flag.Parse()
 	go func() {
-		http.ListenAndServe(":6061", nil)
+		err := http.ListenAndServe(":8003", nil)
+		if err != nil {
+			return
+		}
 	}()
+	flag.Parse()
 	// Set the core num
 	runtime.GOMAXPROCS(int(coreNum))
 
@@ -78,7 +80,6 @@ func main() {
 	}
 	// Set default path and arguments
 	config := cfg.DefaultConfig()
-
 	// Set root(the location of tendermint node)
 	config.SetRoot(homeDir)
 

@@ -126,7 +126,8 @@ cors-allowed-methods = ["HEAD", "GET", "POST", ]
 cors-allowed-headers = ["Origin", "Accept", "Content-Type", "X-Requested-With", "X-Server-Time", ]
 
 # Activate unsafe RPC commands like /dial-seeds and /unsafe-flush-mempool
-unsafe = false
+# unsafe = false
+ unsafe = true
 
 # Maximum number of simultaneous connections (including WebSocket).
 # If you want to accept a larger number than the default, make sure
