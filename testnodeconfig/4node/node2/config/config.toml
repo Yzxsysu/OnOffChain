@@ -229,7 +229,7 @@ external-address = ""
 bootstrap-peers = ""
 
 # Comma separated list of nodes to keep persistent connections to
-persistent-peers = "a419db679acafd95caddc39b3941519ea4c02ec6@172.17.0.3:26656,65003e9db7abfc8fc7e079199dd35baebc4c02c3@172.17.0.4:26656,fa9f23a60941342f7d87a0c7cf4ad2a0b4b8bbf4@172.17.0.6:26656"
+persistent-peers = "764c787e382d7e895bd3c4126c6a6b371f314ba8@172.172.0.3:26656,bc9a8d6bbc1b2514babb836a30c4449238cc89ac@172.172.0.4:26656,c1c26d5fc3d68c941ec519a1dc0414151efe279b@172.172.0.6:26656"
 
 # UPNP port forwarding
 upnp = false
@@ -285,7 +285,7 @@ recv-rate = 5120000
 broadcast = true
 
 # Maximum number of transactions in the mempool
-size = 5000
+size = 50000
 
 # Limit the total size of all txs in the mempool.
 # This only accounts for raw transactions (e.g. given 1MB transactions and
@@ -293,7 +293,7 @@ size = 5000
 max-txs-bytes = 1073741824
 
 # Size of the cache (used to filter transactions we saw earlier) in transactions
-cache-size = 10000
+cache-size = 100000
 
 # Do not remove invalid transactions from the cache (default: false)
 # Set to true if it's not possible for any invalid transaction to become valid

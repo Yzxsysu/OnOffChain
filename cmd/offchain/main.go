@@ -73,16 +73,9 @@ func main() {
 	//	gProf.WriteTo(f2, 0)
 	//}
 	//f2.Close()
-
-<<<<<<< HEAD
 	go func() {
 		http.ListenAndServe(":6060", nil)
 	}()
-=======
-	//go func() {
-	//	http.ListenAndServe(":6060", nil)
-	//}()
->>>>>>> 403921cdd8cfaa0d9cec24b5a6990a454b3472a9
 	flag.Parse()
 	groupIp1, groupIp2, groupIp3 = SplitToThree(webIp)
 	groupPort1, groupPort2, groupPort3 = SplitToThree(webPort)
