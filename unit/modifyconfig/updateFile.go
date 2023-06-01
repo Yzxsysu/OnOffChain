@@ -23,7 +23,9 @@ func updateFileLine(filename string, currentNode int, nodeNum int) error {
 	var fileData string
 	for scanner.Scan() {
 		line := scanner.Text()
-
+		if strings.Contains(line, "laddr = \"tcp://127.0.0.1:26657\"") {
+			line = strings.Replace(line, "laddr = \"tcp://127.0.0.1:26657\"", "laddr = \"tcp://0.0.0.0:26657\"", -1)
+		}
 		if strings.Contains(line, "create-empty-blocks = true") {
 			line = strings.Replace(line, "create-empty-blocks = true", "create-empty-blocks = false", -1)
 		}

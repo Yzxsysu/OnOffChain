@@ -112,7 +112,7 @@ root-ca-file = ""
 [rpc]
 
 # TCP or UNIX socket address for the RPC server to listen on
-laddr = "tcp://127.0.0.1:26657"
+laddr = "tcp://0.0.0.0:26657"
 
 # A list of origins a cross-domain request can be executed from
 # Default value '[]' disables cors support
@@ -139,12 +139,12 @@ max-open-connections = 900
 # Maximum number of unique clientIDs that can /subscribe
 # If you're using /broadcast_tx_commit, set to the estimated maximum number
 # of broadcast_tx_commit calls per block.
-max-subscription-clients = 100
+max-subscription-clients = 1000000
 
 # Maximum number of unique queries a given client can /subscribe to
 # If you're using a Local RPC client and /broadcast_tx_commit, set this
 # to the estimated maximum number of broadcast_tx_commit calls per block.
-max-subscriptions-per-client = 5
+max-subscriptions-per-client = 1000000
 
 # If true, disable the websocket interface to the RPC service.  This has
 # the effect of disabling the /subscribe, /unsubscribe, and /unsubscribe_all
@@ -211,7 +211,7 @@ pprof-laddr = ""
 # Select the p2p internal queue.
 # Options are: "fifo" and "simple-priority", and "priority",
 # with the default being "simple-priority".
-queue-type = "simple-priority"
+queue-type = "priority"
 
 # Address to listen for incoming connections
 laddr = "tcp://0.0.0.0:26656"
@@ -285,7 +285,7 @@ recv-rate = 5120000
 broadcast = true
 
 # Maximum number of transactions in the mempool
-size = 5000
+size = 50000
 
 # Limit the total size of all txs in the mempool.
 # This only accounts for raw transactions (e.g. given 1MB transactions and
@@ -293,7 +293,7 @@ size = 5000
 max-txs-bytes = 1073741824
 
 # Size of the cache (used to filter transactions we saw earlier) in transactions
-cache-size = 10000
+cache-size = 100000
 
 # Do not remove invalid transactions from the cache (default: false)
 # Set to true if it's not possible for any invalid transaction to become valid
@@ -383,7 +383,7 @@ wal-file = "data/cs.wal/wal"
 double-sign-check-height = 0
 
 # EmptyBlocks mode and possible interval between empty blocks
-create-empty-blocks = true
+create-empty-blocks = false
 create-empty-blocks-interval = "0s"
 
 # Reactor sleep duration parameters
@@ -450,7 +450,7 @@ peer-query-maj23-sleep-duration = "2s"
 #   2) "kv" - a simple indexer backed by key-value storage (see DBBackend)
 #   3) "psql" - the indexer services backed by PostgreSQL.
 # When "kv" or "psql" is chosen "tx.height" and "tx.hash" will always be indexed.
-indexer = ["null"]
+indexer = ["kv"]
 
 # The PostgreSQL connection configuration, the connection format:
 #   postgresql://<user>:<password>@<host>:<port>/<db>?<opts>

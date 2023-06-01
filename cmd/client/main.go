@@ -82,7 +82,7 @@ func main() {
 			//fmt.Println(len(str))
 			b := []byte(str)
 			fmt.Println(len(b))
-			request1 := "172.172.0.3:20057/broadcast_tx_commit?tx=\"" + str + "\""
+			request1 := "172.172.0.3:26657/broadcast_tx_commit?tx=\"" + str + "\""
 			_, err = http.Get("http://" + request1)
 			if err != nil {
 				fmt.Println(err)

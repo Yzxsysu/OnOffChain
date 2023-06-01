@@ -112,7 +112,7 @@ root-ca-file = ""
 [rpc]
 
 # TCP or UNIX socket address for the RPC server to listen on
-laddr = "tcp://127.0.0.1:26657"
+laddr = "tcp://0.0.0.0:26657"
 
 # A list of origins a cross-domain request can be executed from
 # Default value '[]' disables cors support
@@ -139,7 +139,7 @@ max-open-connections = 900
 # Maximum number of unique clientIDs that can /subscribe
 # If you're using /broadcast_tx_commit, set to the estimated maximum number
 # of broadcast_tx_commit calls per block.
-max-subscription-clients = 1000000
+max-subscription-clients = 10000000000
 
 # Maximum number of unique queries a given client can /subscribe to
 # If you're using a Local RPC client and /broadcast_tx_commit, set this
@@ -285,7 +285,7 @@ recv-rate = 5120000
 broadcast = true
 
 # Maximum number of transactions in the mempool
-size = 50000
+size = 500000
 
 # Limit the total size of all txs in the mempool.
 # This only accounts for raw transactions (e.g. given 1MB transactions and
@@ -293,7 +293,7 @@ size = 50000
 max-txs-bytes = 1073741824
 
 # Size of the cache (used to filter transactions we saw earlier) in transactions
-cache-size = 100000
+cache-size = 1000000
 
 # Do not remove invalid transactions from the cache (default: false)
 # Set to true if it's not possible for any invalid transaction to become valid
