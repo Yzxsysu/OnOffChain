@@ -42,37 +42,6 @@ func init() {
 
 // 监听proposal的Sub和SubV即可
 func main() {
-	//f, err := os.Create("offChainCpu.prof")
-	//if err != nil {
-	//	_ = fmt.Errorf("could not create CPU profile: ", err)
-	//}
-	//if err := pprof.StartCPUProfile(f); err != nil {
-	//	_ = fmt.Errorf("could not start CPU profile: ", err)
-	//}
-	////runtime.GC()
-	//defer pprof.StopCPUProfile()
-	//
-	//f1, err := os.Create("offChainMem.prof")
-	//if err != nil {
-	//	_ = fmt.Errorf("could not create memory profile: ", err)
-	//}
-	////runtime.GC()
-	//if err := pprof.WriteHeapProfile(f1); err != nil {
-	//	fmt.Errorf("could not write memory profile: ", err)
-	//}
-	//f1.Close()
-	//
-	//f2, err := os.Create("offChainGoroutine.prof")
-	//if err != nil {
-	//	_ = fmt.Errorf("could not create goroutine profile: ", err)
-	//}
-	////runtime.GC()
-	//if gProf := pprof.Lookup("goroutine"); gProf == nil {
-	//	fmt.Errorf("could not write goroutine: ")
-	//} else {
-	//	gProf.WriteTo(f2, 0)
-	//}
-	//f2.Close()
 	go func() {
 		http.ListenAndServe(":6060", nil)
 	}()
@@ -80,14 +49,8 @@ func main() {
 	groupIp1, groupIp2, groupIp3 = SplitToThree(webIp)
 	groupPort1, groupPort2, groupPort3 = SplitToThree(webPort)
 
-	// Create account the same state
 	CreateAccountNum(int(accountNum))
 
-	// Subscribe to the leader websocket using goroutine
-	// define the url
-	//S := url.URL{Scheme: "http", Host: offChainIp + ":" + offChainPort, Path: "/S"}
-	//SV := url.URL{Scheme: "http", Host: offChainIp + ":" + offChainPort, Path: "/SV"}
-	//Tx := url.URL{Scheme: "http", Host: offChainIp + ":" + offChainPort, Path: "/Tx"}
 	http.HandleFunc("/S", WSHandlerS)
 	http.HandleFunc("/SV", WSHandlerSV)
 	http.HandleFunc("/Tx", WSHandlerTx)
@@ -99,7 +62,6 @@ func main() {
 	<-c
 }
 
-// Execute simulate the execute
 func Validate() {
 	for {
 		s := <-Txs
@@ -239,31 +201,6 @@ func Merge() {
 		mSave[key] = value.Save
 		mCheck[key] = value.Check
 	}
-	/*jm1, err := json.Marshal(m1)
-	if err != nil {
-		return
-	}
-	jm2, err := json.Marshal(m2)
-	if err != nil {
-		log.Println(err)
-	}
-	jm3, err := json.Marshal(m3)
-	if err != nil {
-		log.Println(err)
-	}
-	jm4, err := json.Marshal(m4)
-	if err != nil {
-		log.Println(err)
-	}
-	jm5, err := json.Marshal(m5)
-	if err != nil {
-		log.Println(err)
-	}
-	jm6, err := json.Marshal(m6)
-	if err != nil {
-		log.Println(err)
-	}
-	*/
 }
 
 func SplitToThree(ports string) ([]string, []string, []string) {
