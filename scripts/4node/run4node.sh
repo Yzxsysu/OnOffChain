@@ -40,7 +40,7 @@ case $nodeId in
     echo "the node Id is ${nodeId}"
     ;;
     -1)
-    ./build/offchain/offchain -accountNum 1000 -webIp "172.172.0.4,172.172.0.5,172.172.0.6" -webPort "10157,10157,10157" -offChainIp "0.0.0.1" -offChainPort "8090" -SetNum "$division" &> $LOG_DIR/offchain.log &
+    ./build/offchain/offchain -accountNum 1000 -webIp "172.172.0.4,172.172.0.5,172.172.0.6" -webPort "10157,10157,10157" -offChainIp "0.0.0.0" -offChainPort "8090" -SetNum "$division" &> $LOG_DIR/offchain.log &
     echo "the node Id is ${nodeId}, offchain node"
     ;;
 esac

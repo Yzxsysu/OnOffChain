@@ -42,9 +42,6 @@ func init() {
 
 // 监听proposal的Sub和SubV即可
 func main() {
-	go func() {
-		http.ListenAndServe(":6060", nil)
-	}()
 	flag.Parse()
 	groupIp1, groupIp2, groupIp3 = SplitToThree(webIp)
 	groupPort1, groupPort2, groupPort3 = SplitToThree(webPort)
