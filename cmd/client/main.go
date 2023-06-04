@@ -35,7 +35,6 @@ func main() {
 				fmt.Println(err)
 			}
 		}(str)
-		time.Sleep(time.Millisecond * 1000)
 		time.Sleep(time.Millisecond * 500)
 	}
 }

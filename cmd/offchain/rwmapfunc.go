@@ -1,65 +1,68 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"strconv"
 	"strings"
+	"sync"
 )
 
-func OValidate(s *[]SmallBankTransaction, GE *[][]GraphEdge, group int, v chan map[string]AccountVersion) {
-	order, m := Dfs(*GE, group)
-	RWm := NewRWMap(len(m))
-	RWm.m = m
-
-	log.Println("OValidate:group", order, group)
-
-	lG := len(order)
-	version := make(map[string]AccountVersion)
-	var TxType uint8
-	var TxId uint16
-	var From []byte
-	var To []byte
-	var Balance int
-	for i := lG - 1; i >= 0; i-- {
-		TxType = (*s)[order[i]-1].T
-		TxId = (*s)[order[i]-1].I
-		From = (*s)[order[i]-1].F
-		To = (*s)[order[i]-1].O
-		Balance = (*s)[order[i]-1].B
-		switch TxType {
-		case GetBalance:
-			RWOGetBalance(TxId, string(From), RWm, version)
-			//OGetBalance(TxId, string(From), m, version)
-		case Amalgamate:
-			RWOAmalgamate(TxId, string(From), string(To), RWm, version)
-			//OAmalgamate(TxId, string(From), string(To), m, version)
-		case UpdateBalance:
-			RWOUpdateBalance(TxId, string(From), Balance, RWm, version)
-			//OUpdateBalance(TxId, string(From), Balance, m, version)
-		case UpdateSaving:
-			RWOUpdateSaving(TxId, string(From), Balance, RWm, version)
-			//OUpdateSaving(TxId, string(From), Balance, m, version)
-		case SendPayment:
-			RWOSendPayment(TxId, string(From), string(To), Balance, RWm, version)
-			//OSendPayment(TxId, string(From), string(To), Balance, m, version)
-		case WriteCheck:
-			RWOWriteCheck(TxId, string(From), Balance, RWm, version)
-			//OWriteCheck(TxId, string(From), Balance, m, version)
-		default:
-			fmt.Println("T doesn't match")
-		}
-	}
-
-	log.Println("v <- version", version, group)
-	v <- version
+type RWMap struct {
+	m map[uint16]string
+	sync.RWMutex
 }
 
-func OGetBalance(TxId uint16, A string, m map[uint16]string, version map[string]AccountVersion) {
+func NewRWMap(n int) *RWMap {
+	return &RWMap{
+		m: make(map[uint16]string, n),
+	}
+}
+
+func (m *RWMap) Get(k uint16) (string, bool) {
+	m.RLock()
+	defer m.RUnlock()
+	v, ok := m.m[k]
+	return v, ok
+}
+
+func (m *RWMap) Set(k uint16, v string) {
+	m.Lock()
+	defer m.Unlock()
+	m.m[k] = v
+}
+
+func (m *RWMap) Delete(k uint16) {
+	m.Lock()
+	defer m.Unlock()
+	delete(m.m, k)
+}
+
+func (m *RWMap) Len() int {
+	m.RLock()
+	defer m.RUnlock()
+	return len(m.m)
+}
+
+func (m *RWMap) Each(f func(k uint16, v string) bool) {
+	// 遍历期间有读锁
+	m.RLock()
+	defer m.RUnlock()
+
+	for k, v := range m.m {
+		if !f(k, v) {
+			return
+		}
+	}
+}
+
+func RWOGetBalance(TxId uint16, A string, m *RWMap, version map[string]AccountVersion) {
 	// don't need to modify the state of BlockchainState
 }
 
-func OAmalgamate(TxId uint16, A string, B string, m map[uint16]string, version map[string]AccountVersion) {
+func RWOAmalgamate(TxId uint16, A string, B string, m *RWMap, version map[string]AccountVersion) {
+	m.Lock()
+	defer m.Unlock()
+
 	var SaveInt int
 	var CheckInt int
 
@@ -79,7 +82,8 @@ func OAmalgamate(TxId uint16, A string, B string, m map[uint16]string, version m
 		version[B] = NewAccountVersion()
 	}
 
-	v, ok := m[TxId]
+	v, ok := m.Get(TxId)
+
 	if ok {
 		// name="" < name=""
 		s1 := strings.Split(v, "<")
@@ -157,7 +161,10 @@ func OAmalgamate(TxId uint16, A string, B string, m map[uint16]string, version m
 	version[B] = AVersion
 }
 
-func OUpdateBalance(TxId uint16, A string, Balance int, m map[uint16]string, version map[string]AccountVersion) {
+func RWOUpdateBalance(TxId uint16, A string, Balance int, m *RWMap, version map[string]AccountVersion) {
+	m.Lock()
+	defer m.Unlock()
+
 	var name string
 	var CheckVersion string
 	var ConsistentCheckValue string
@@ -168,7 +175,7 @@ func OUpdateBalance(TxId uint16, A string, Balance int, m map[uint16]string, ver
 	if !ok {
 		version[A] = NewAccountVersion()
 	}
-	v, ok := m[TxId]
+	v, ok := m.Get(TxId)
 	if ok {
 		// name="" < name=""
 		s1 := strings.Split(v, "<")
@@ -221,7 +228,9 @@ func OUpdateBalance(TxId uint16, A string, Balance int, m map[uint16]string, ver
 }
 
 // OUpdateSaving fatal error: concurrent map read and map write
-func OUpdateSaving(TxId uint16, A string, Balance int, m map[uint16]string, version map[string]AccountVersion) {
+func RWOUpdateSaving(TxId uint16, A string, Balance int, m *RWMap, version map[string]AccountVersion) {
+	m.Lock()
+	defer m.Unlock()
 	var name string
 	var SaveVersion string
 	var ConsistentSaveValue string
@@ -232,7 +241,9 @@ func OUpdateSaving(TxId uint16, A string, Balance int, m map[uint16]string, vers
 	if !ok {
 		version[A] = NewAccountVersion()
 	}
-	v, ok := m[TxId]
+
+	v, ok := m.Get(TxId)
+
 	if ok {
 		// name="" < name=""
 		s1 := strings.Split(v, "<")
@@ -282,7 +293,10 @@ func OUpdateSaving(TxId uint16, A string, Balance int, m map[uint16]string, vers
 	version[A] = AVersion
 }
 
-func OSendPayment(TxId uint16, A string, B string, Balance int, m map[uint16]string, version map[string]AccountVersion) {
+func RWOSendPayment(TxId uint16, A string, B string, Balance int, m *RWMap, version map[string]AccountVersion) {
+	m.Lock()
+	defer m.Unlock()
+
 	var name string
 	var CheckVersion string
 	var ConsistentCheckValue string
@@ -303,7 +317,7 @@ func OSendPayment(TxId uint16, A string, B string, Balance int, m map[uint16]str
 		version[B] = NewAccountVersion()
 	}
 
-	v, ok := m[TxId]
+	v, ok := m.Get(TxId)
 	if ok {
 		// name="" < name=""
 		s1 := strings.Split(v, "<")
@@ -381,7 +395,10 @@ func OSendPayment(TxId uint16, A string, B string, Balance int, m map[uint16]str
 	version[B] = AVersion
 }
 
-func OWriteCheck(TxId uint16, A string, Balance int, m map[uint16]string, version map[string]AccountVersion) {
+func RWOWriteCheck(TxId uint16, A string, Balance int, m *RWMap, version map[string]AccountVersion) {
+	m.Lock()
+	defer m.Unlock()
+
 	var SaveInt int
 	var CheckInt int
 
@@ -397,7 +414,7 @@ func OWriteCheck(TxId uint16, A string, Balance int, m map[uint16]string, versio
 		version[A] = NewAccountVersion()
 	}
 
-	v, ok := m[TxId]
+	v, ok := m.Get(TxId)
 	if ok {
 		// name="" < name=""
 		s1 := strings.Split(v, "<")
