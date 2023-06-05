@@ -74,7 +74,7 @@ func (app SmallBankApplication) CheckTx(req abcitypes.RequestCheckTx) abcitypes.
 			go SendData(SubV, Ips[i], port, "/SV")
 		}
 	}
-	return abcitypes.ResponseCheckTx{Code: abcicode.CodeTypeOK, GasUsed: 1}
+	return abcitypes.ResponseCheckTx{Code: abcicode.CodeTypeOK, GasUsed: 0}
 }
 
 // 这里我们创建了一个batch，它将存储block的交易。

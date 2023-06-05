@@ -44,6 +44,8 @@ func (BCstate *BlockchainState) DValidate(s *[]SmallBankTransaction) {
 			log.Println("u:", u)
 			go BCstate.Validate(s, &GE, &u, 1-1)
 			go BCstate.Validate(s, &GE, &u, 2-1)
+			// 可能是这里被阻塞了
+			// offchain的问题
 			go BCstate.MergeSV(<-MsgV6)
 			ver1 := <-Version
 			ver2 := <-Version

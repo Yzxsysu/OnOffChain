@@ -60,9 +60,6 @@ func RWOGetBalance(TxId uint16, A string, m *RWMap, version map[string]AccountVe
 }
 
 func RWOAmalgamate(TxId uint16, A string, B string, m *RWMap, version map[string]AccountVersion) {
-	m.Lock()
-	defer m.Unlock()
-
 	var SaveInt int
 	var CheckInt int
 
@@ -162,9 +159,6 @@ func RWOAmalgamate(TxId uint16, A string, B string, m *RWMap, version map[string
 }
 
 func RWOUpdateBalance(TxId uint16, A string, Balance int, m *RWMap, version map[string]AccountVersion) {
-	m.Lock()
-	defer m.Unlock()
-
 	var name string
 	var CheckVersion string
 	var ConsistentCheckValue string
@@ -229,8 +223,6 @@ func RWOUpdateBalance(TxId uint16, A string, Balance int, m *RWMap, version map[
 
 // OUpdateSaving fatal error: concurrent map read and map write
 func RWOUpdateSaving(TxId uint16, A string, Balance int, m *RWMap, version map[string]AccountVersion) {
-	m.Lock()
-	defer m.Unlock()
 	var name string
 	var SaveVersion string
 	var ConsistentSaveValue string
@@ -294,9 +286,6 @@ func RWOUpdateSaving(TxId uint16, A string, Balance int, m *RWMap, version map[s
 }
 
 func RWOSendPayment(TxId uint16, A string, B string, Balance int, m *RWMap, version map[string]AccountVersion) {
-	m.Lock()
-	defer m.Unlock()
-
 	var name string
 	var CheckVersion string
 	var ConsistentCheckValue string
@@ -396,9 +385,6 @@ func RWOSendPayment(TxId uint16, A string, B string, Balance int, m *RWMap, vers
 }
 
 func RWOWriteCheck(TxId uint16, A string, Balance int, m *RWMap, version map[string]AccountVersion) {
-	m.Lock()
-	defer m.Unlock()
-
 	var SaveInt int
 	var CheckInt int
 
