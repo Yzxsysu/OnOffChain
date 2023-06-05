@@ -7,6 +7,7 @@ import (
 	"os"
 	"os/signal"
 	"strings"
+	"sync"
 	"syscall"
 )
 
@@ -23,8 +24,12 @@ var mV4 = make(chan map[string]AccountVersion, bufferLength)
 var mV5 = make(chan map[string]AccountVersion, bufferLength)
 var mV6 = make(chan map[string]AccountVersion, bufferLength)
 
-var mSave = make(map[string]int)
-var mCheck = make(map[string]int)
+// fatal error: concurrent map read and map write
+var syncSave = sync.Map{}
+var syncCheck = sync.Map{}
+
+// var mSave = make(map[string]int, accountNum)
+// var mCheck = make(map[string]int, accountNum)
 var webIp, webPort string
 var groupIp1, groupIp2, groupIp3 []string
 var groupPort1, groupPort2, groupPort3 []string
@@ -143,11 +148,13 @@ func Merge() {
 		}
 		if tempSaveVersion[key] < value.SaveVersion {
 			tempSaveVersion[key] = value.SaveVersion
-			mSave[key] = value.Save
+			//mSave[key] = value.Save
+			syncSave.Store(key, value.Save)
 		}
 		if tempCheckVersion[key] < value.CheckVersion {
 			tempCheckVersion[key] = value.CheckVersion
-			mCheck[key] = value.Check
+			//mCheck[key] = value.Check
+			syncCheck.Store(key, value.Check)
 		}
 	}
 	for key, value := range m2 {
@@ -161,11 +168,13 @@ func Merge() {
 		}
 		if tempSaveVersion[key] < value.SaveVersion {
 			tempSaveVersion[key] = value.SaveVersion
-			mSave[key] = value.Save
+			//mSave[key] = value.Save
+			syncSave.Store(key, value.Save)
 		}
 		if tempCheckVersion[key] < value.CheckVersion {
 			tempCheckVersion[key] = value.CheckVersion
-			mCheck[key] = value.Check
+			//mCheck[key] = value.Check
+			syncCheck.Store(key, value.Check)
 		}
 	}
 	for key, value := range m3 {
@@ -179,24 +188,32 @@ func Merge() {
 		}
 		if tempSaveVersion[key] < value.SaveVersion {
 			tempSaveVersion[key] = value.SaveVersion
-			mSave[key] = value.Save
+			//mSave[key] = value.Save
+			syncSave.Store(key, value.Save)
 		}
 		if tempCheckVersion[key] < value.CheckVersion {
 			tempCheckVersion[key] = value.CheckVersion
-			mCheck[key] = value.Check
+			//mCheck[key] = value.Check
+			syncCheck.Store(key, value.Check)
 		}
 	}
 	for key, value := range m4 {
-		mSave[key] = value.Save
-		mCheck[key] = value.Check
+		//mSave[key] = value.Save
+		//mCheck[key] = value.Check
+		syncSave.Store(key, value.Save)
+		syncCheck.Store(key, value.Check)
 	}
 	for key, value := range m5 {
-		mSave[key] = value.Save
-		mCheck[key] = value.Check
+		//mSave[key] = value.Save
+		//mCheck[key] = value.Check
+		syncSave.Store(key, value.Save)
+		syncCheck.Store(key, value.Check)
 	}
 	for key, value := range m6 {
-		mSave[key] = value.Save
-		mCheck[key] = value.Check
+		//mSave[key] = value.Save
+		//mCheck[key] = value.Check
+		syncSave.Store(key, value.Save)
+		syncCheck.Store(key, value.Check)
 	}
 }
 

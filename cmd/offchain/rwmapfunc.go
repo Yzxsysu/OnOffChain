@@ -126,7 +126,9 @@ func RWOAmalgamate(TxId uint16, A string, B string, m *RWMap, version map[string
 		temp, _ := strconv.ParseInt(ConsistentSaveValue, 10, 64)
 		SaveInt = int(temp)
 	} else {
-		Save, err := mSave[A]
+		SaveValue, err := syncSave.Load(A)
+		Save := SaveValue.(int)
+		//Save, err := mSave[A]
 		if err != true {
 			log.Println(err)
 		}
@@ -137,7 +139,9 @@ func RWOAmalgamate(TxId uint16, A string, B string, m *RWMap, version map[string
 		temp, _ := strconv.ParseInt(ConsistentCheckValue, 10, 64)
 		CheckInt = int(temp)
 	} else {
-		Check, err := mCheck[B]
+		CheckValue, err := syncCheck.Load(B)
+		Check := CheckValue.(int)
+		//Check, err := mCheck[B]
 		if err != true {
 			log.Println(err)
 		}
@@ -205,7 +209,9 @@ func RWOUpdateBalance(TxId uint16, A string, Balance int, m *RWMap, version map[
 		temp, _ := strconv.ParseInt(ConsistentCheckValue, 10, 64)
 		CheckInt = int(temp)
 	} else {
-		Check, err := mCheck[A]
+		CheckValue, err := syncCheck.Load(A)
+		Check := CheckValue.(int)
+		//Check, err := mCheck[A]
 		if err != true {
 			log.Println(err)
 		}
@@ -270,7 +276,9 @@ func RWOUpdateSaving(TxId uint16, A string, Balance int, m *RWMap, version map[s
 		temp, _ := strconv.ParseInt(ConsistentSaveValue, 10, 64)
 		SaveInt = int(temp)
 	} else {
-		Save, err := mSave[A]
+		SaveValue, err := syncSave.Load(A)
+		Save := SaveValue.(int)
+		//Save, err := mSave[A]
 		if err != true {
 			log.Println(err)
 		}
@@ -350,7 +358,9 @@ func RWOSendPayment(TxId uint16, A string, B string, Balance int, m *RWMap, vers
 		temp, _ := strconv.ParseInt(CheckAS, 10, 64)
 		CheckIntA = int(temp)
 	} else {
-		CheckA, err := mCheck[A]
+		CheckValue, err := syncCheck.Load(A)
+		CheckA := CheckValue.(int)
+		//CheckA, err := mCheck[A]
 		if err != true {
 			log.Println(err)
 		}
@@ -361,7 +371,9 @@ func RWOSendPayment(TxId uint16, A string, B string, Balance int, m *RWMap, vers
 		temp, _ := strconv.ParseInt(CheckBS, 10, 64)
 		CheckIntB = int(temp)
 	} else {
-		CheckB, err := mCheck[B]
+		CheckValue, err := syncCheck.Load(B)
+		CheckB := CheckValue.(int)
+		//CheckB, err := mCheck[B]
 		if err != true {
 			log.Println(err)
 		}
@@ -445,7 +457,9 @@ func RWOWriteCheck(TxId uint16, A string, Balance int, m *RWMap, version map[str
 		temp, _ := strconv.ParseInt(ConsistentSaveValue, 10, 64)
 		SaveInt = int(temp)
 	} else {
-		Save, err := mSave[A]
+		SaveValue, err := syncSave.Load(A)
+		Save := SaveValue.(int)
+		//Save, err := mSave[A]
 		if err != true {
 			log.Println(err)
 		}
@@ -456,7 +470,9 @@ func RWOWriteCheck(TxId uint16, A string, Balance int, m *RWMap, version map[str
 		temp, _ := strconv.ParseInt(ConsistentCheckValue, 10, 64)
 		CheckInt = int(temp)
 	} else {
-		Check, err := mCheck[A]
+		CheckValue, err := syncCheck.Load(A)
+		Check := CheckValue.(int)
+		//Check, err := mCheck[A]
 		if err != true {
 			log.Println(err)
 		}

@@ -125,7 +125,9 @@ func OAmalgamate(TxId uint16, A string, B string, m map[uint16]string, version m
 		temp, _ := strconv.ParseInt(ConsistentSaveValue, 10, 64)
 		SaveInt = int(temp)
 	} else {
-		Save, err := mSave[A]
+		SaveValue, err := syncSave.Load(A)
+		Save := SaveValue.(int)
+		//Save, err := mSave[A]
 		if err != true {
 			log.Println(err)
 		}
@@ -136,7 +138,9 @@ func OAmalgamate(TxId uint16, A string, B string, m map[uint16]string, version m
 		temp, _ := strconv.ParseInt(ConsistentCheckValue, 10, 64)
 		CheckInt = int(temp)
 	} else {
-		Check, err := mCheck[B]
+		CheckValue, err := syncCheck.Load(B)
+		Check := CheckValue.(int)
+		//Check, err := mCheck[B]
 		if err != true {
 			log.Println(err)
 		}
@@ -204,7 +208,9 @@ func OUpdateBalance(TxId uint16, A string, Balance int, m map[uint16]string, ver
 		temp, _ := strconv.ParseInt(ConsistentCheckValue, 10, 64)
 		CheckInt = int(temp)
 	} else {
-		Check, err := mCheck[A]
+		CheckValue, err := syncCheck.Load(A)
+		Check := CheckValue.(int)
+		//Check, err := mCheck[A]
 		if err != true {
 			log.Println(err)
 		}
@@ -267,7 +273,9 @@ func OUpdateSaving(TxId uint16, A string, Balance int, m map[uint16]string, vers
 		temp, _ := strconv.ParseInt(ConsistentSaveValue, 10, 64)
 		SaveInt = int(temp)
 	} else {
-		Save, err := mSave[A]
+		SaveValue, err := syncSave.Load(A)
+		Save := SaveValue.(int)
+		//Save, err := mSave[A]
 		if err != true {
 			log.Println(err)
 		}
@@ -347,7 +355,9 @@ func OSendPayment(TxId uint16, A string, B string, Balance int, m map[uint16]str
 		temp, _ := strconv.ParseInt(CheckAS, 10, 64)
 		CheckIntA = int(temp)
 	} else {
-		CheckA, err := mCheck[A]
+		CheckValue, err := syncCheck.Load(A)
+		CheckA := CheckValue.(int)
+		//CheckA, err := mCheck[A]
 		if err != true {
 			log.Println(err)
 		}
@@ -358,7 +368,9 @@ func OSendPayment(TxId uint16, A string, B string, Balance int, m map[uint16]str
 		temp, _ := strconv.ParseInt(CheckBS, 10, 64)
 		CheckIntB = int(temp)
 	} else {
-		CheckB, err := mCheck[B]
+		CheckValue, err := syncCheck.Load(B)
+		CheckB := CheckValue.(int)
+		//CheckB, err := mCheck[B]
 		if err != true {
 			log.Println(err)
 		}
@@ -442,7 +454,9 @@ func OWriteCheck(TxId uint16, A string, Balance int, m map[uint16]string, versio
 		temp, _ := strconv.ParseInt(ConsistentSaveValue, 10, 64)
 		SaveInt = int(temp)
 	} else {
-		Save, err := mSave[A]
+		SaveValue, err := syncSave.Load(A)
+		Save := SaveValue.(int)
+		//Save, err := mSave[A]
 		if err != true {
 			log.Println(err)
 		}
@@ -453,7 +467,9 @@ func OWriteCheck(TxId uint16, A string, Balance int, m map[uint16]string, versio
 		temp, _ := strconv.ParseInt(ConsistentCheckValue, 10, 64)
 		CheckInt = int(temp)
 	} else {
-		Check, err := mCheck[A]
+		CheckValue, err := syncCheck.Load(A)
+		Check := CheckValue.(int)
+		//Check, err := mCheck[A]
 		if err != true {
 			log.Println(err)
 		}

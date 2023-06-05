@@ -4,8 +4,10 @@ import "strconv"
 
 func CreateAccount(AccountName string, SavingBalance int, CheckingBalance int) {
 	// Create two separate accounts for two DB
-	mSave[AccountName] = SavingBalance
-	mCheck[AccountName] = CheckingBalance
+	//mSave[AccountName] = SavingBalance
+	//mCheck[AccountName] = CheckingBalance
+	syncSave.Store(AccountName, SavingBalance)
+	syncCheck.Store(AccountName, CheckingBalance)
 }
 
 func CreateAccountNum(accountNum int) {

@@ -60,13 +60,17 @@ func OVAmalgamate(A string, B string, version map[string]AccountVersion) {
 		version[B] = NewAccountVersion()
 	}
 
-	Save, err := mSave[A]
+	SaveValue, err := syncSave.Load(A)
+	Save := SaveValue.(int)
+	//Save, err := mSave[A]
 	if err != true {
 		log.Println(err)
 	}
 	SaveInt = Save
 
-	Check, err := mCheck[B]
+	CheckValue, err := syncCheck.Load(B)
+	Check := CheckValue.(int)
+	//Check, err := mCheck[B]
 	if err != true {
 		log.Println(err)
 	}
@@ -94,7 +98,10 @@ func OVUpdateBalance(A string, Balance int, version map[string]AccountVersion) {
 		version[A] = NewAccountVersion()
 	}
 
-	Check, err := mCheck[A]
+	CheckValue, err := syncCheck.Load(A)
+	Check := CheckValue.(int)
+	//Check, err := mCheck[A]
+
 	if err != true {
 		log.Println(err)
 	}
@@ -117,7 +124,9 @@ func OVUpdateSaving(A string, Balance int, version map[string]AccountVersion) {
 		version[A] = NewAccountVersion()
 	}
 
-	Save, err := mSave[A]
+	SaveValue, err := syncSave.Load(A)
+	Save := SaveValue.(int)
+	//Save, err := mSave[A]
 	if err != true {
 		log.Println(err)
 	}
@@ -145,13 +154,17 @@ func OVSendPayment(A string, B string, Balance int, version map[string]AccountVe
 		version[B] = NewAccountVersion()
 	}
 
-	CheckA, err := mCheck[A]
+	CheckValueA, err := syncCheck.Load(A)
+	CheckA := CheckValueA.(int)
+	//CheckA, err := mCheck[A]
 	if err != true {
 		log.Println(err)
 	}
 	CheckIntA = CheckA
 
-	CheckB, err := mCheck[B]
+	CheckValueB, err := syncCheck.Load(B)
+	CheckB := CheckValueB.(int)
+	//CheckB, err := mCheck[B]
 	if err != true {
 		log.Println(err)
 	}
@@ -183,13 +196,17 @@ func OVWriteCheck(A string, Balance int, version map[string]AccountVersion) {
 		version[A] = NewAccountVersion()
 	}
 
-	Save, err := mSave[A]
+	SaveValue, err := syncSave.Load(A)
+	Save := SaveValue.(int)
+	//Save, err := mSave[A]
 	if err != true {
 		log.Println(err)
 	}
 	SaveInt = Save
 
-	Check, err := mCheck[A]
+	CheckValue, err := syncCheck.Load(A)
+	Check := CheckValue.(int)
+	//Check, err := mCheck[A]
 	if err != true {
 		log.Println(err)
 	}
