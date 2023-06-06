@@ -17,8 +17,9 @@ const (
 	BalanceString string = "B"
 )
 
-func ResolveTx(request *[]byte) []SmallBankTransaction {
-	txs := bytes.Split(*request, []byte(">"))
+func ResolveTx(request []byte) []SmallBankTransaction {
+	log.Println("Before ReceiveTx:")
+	txs := bytes.Split(request, []byte(">"))
 	l := len(txs)
 	if l == 0 {
 		log.Println("the tx is nil")
@@ -53,6 +54,7 @@ func ResolveTx(request *[]byte) []SmallBankTransaction {
 		}
 		ReceiveTx[i] = tx
 	}
+	log.Println("After ReceiveTx:")
 	return ReceiveTx
 }
 

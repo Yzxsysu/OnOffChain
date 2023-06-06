@@ -56,7 +56,7 @@ func main() {
 	http.HandleFunc("/S", WSHandlerS)
 	http.HandleFunc("/SV", WSHandlerSV)
 	http.HandleFunc("/Tx", WSHandlerTx)
-	//go http.ListenAndServe()
+
 	go Validate()
 	go Subscribe(offChainIp + ":" + offChainPort)
 	c := make(chan os.Signal, 1)

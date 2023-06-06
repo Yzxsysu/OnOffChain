@@ -31,11 +31,15 @@ func Dfs(GE [][]GraphEdge, groupNum int) ([]uint16, map[uint16]string) {
 	return order, m
 }
 
-func (BCstate *BlockchainState) GValidate(s *[]SmallBankTransaction, GE *[][]GraphEdge, group int, v chan map[string]AccountVersion, ch chan bool) {
+func (BCstate *BlockchainState) GValidate(s []SmallBankTransaction, GE *[][]GraphEdge, group int, v chan map[string]AccountVersion, ch chan bool) {
 	order, m := Dfs(*GE, group)
 	lG := len(order)
 	log.Println("GValidate:", group)
 	if lG == 0 {
+		log.Println("lG == 0")
+		version := make(map[string]AccountVersion)
+		v <- version
+		ch <- true
 		return
 	}
 	version := make(map[string]AccountVersion)
@@ -45,11 +49,11 @@ func (BCstate *BlockchainState) GValidate(s *[]SmallBankTransaction, GE *[][]Gra
 	var To []byte
 	var Balance int
 	for i := lG - 1; i >= 0; i-- {
-		TxType = (*s)[order[i]-1].T
-		TxId = (*s)[order[i]-1].I
-		From = (*s)[order[i]-1].F
-		To = (*s)[order[i]-1].O
-		Balance = (*s)[order[i]-1].B
+		TxType = (s)[order[i]-1].T
+		TxId = (s)[order[i]-1].I
+		From = (s)[order[i]-1].F
+		To = (s)[order[i]-1].O
+		Balance = (s)[order[i]-1].B
 		switch TxType {
 		case GetBalance:
 			BCstate.GGetBalance(TxId, string(From), m, version)

@@ -50,12 +50,6 @@ func init() {
 }
 
 func main() {
-	go func() {
-		err := http.ListenAndServe(":8003", nil)
-		if err != nil {
-			return
-		}
-	}()
 	//go func() {
 	//	err := http.ListenAndServe(":8003", nil)
 	//	if err != nil {

@@ -39,6 +39,7 @@ var Ports []string
 
 func SendData(msg interface{}, ip string, port string, path string) {
 	u := url.URL{Scheme: "http", Host: ip + ":" + port, Path: path}
+	log.Println("Before SendData", path)
 	jsonData, err := json.Marshal(msg)
 	if err != nil {
 		log.Println("SendData func json err:", err)
@@ -54,6 +55,7 @@ func SendData(msg interface{}, ip string, port string, path string) {
 	if err != nil {
 		log.Println("resp err:", err)
 	}
+	log.Println("After SendData", path)
 }
 
 var OffChainIp string
@@ -74,14 +76,17 @@ func (app SmallBankApplication) CheckTx(req abcitypes.RequestCheckTx) abcitypes.
 			go SendData(SubV, Ips[i], port, "/SV")
 		}
 	}
-	return abcitypes.ResponseCheckTx{Code: abcicode.CodeTypeOK, GasUsed: 0}
+	return abcitypes.ResponseCheckTx{Code: abcicode.CodeTypeOK, GasUsed: 1}
 }
 
 // 这里我们创建了一个batch，它将存储block的交易。
 func (app *SmallBankApplication) DeliverTx(req abcitypes.RequestDeliverTx) abcitypes.ResponseDeliverTx {
 	if !app.Node.Leader {
-		ReceiveTx := application.ResolveTx(&req.Tx)
-		app.Node.DValidate(&ReceiveTx)
+		log.Println("replica DeliverTx")
+		ReceiveTx := application.ResolveTx(req.Tx)
+		app.Node.DValidate(ReceiveTx)
+	} else {
+		log.Println("Leader doesn't need to DeliverTx")
 	}
 	return abcitypes.ResponseDeliverTx{Code: abcicode.CodeTypeOK}
 }

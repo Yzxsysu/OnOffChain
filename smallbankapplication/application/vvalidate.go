@@ -5,10 +5,12 @@ import (
 	"log"
 )
 
-func (BCstate *BlockchainState) VValidate(s *[]SmallBankTransaction, v *[]uint16, ch chan bool) {
-	log.Println("VValidate:", *v)
+func (BCstate *BlockchainState) VValidate(s []SmallBankTransaction, v *[]uint16, ch chan bool) {
 	l := len(*v)
-	if l == 0 {
+	log.Println("VValidate len:", l)
+	if l == 0 || (*v)[0] == 0 {
+		log.Println("(*v)[0] == 0, and l = ", l)
+		ch <- true
 		return
 	}
 	var TxType uint8
@@ -18,7 +20,7 @@ func (BCstate *BlockchainState) VValidate(s *[]SmallBankTransaction, v *[]uint16
 	var Balance int
 
 	for i := 0; i < l; i++ {
-		tx := (*s)[(*v)[i]-1]
+		tx := (s)[(*v)[i]-1]
 		TxType = tx.T
 		//I = tx.I
 		From = tx.F
@@ -38,7 +40,7 @@ func (BCstate *BlockchainState) VValidate(s *[]SmallBankTransaction, v *[]uint16
 		case WriteCheck:
 			go BCstate.VWriteCheck(string(From), Balance)
 		default:
-			fmt.Println("T doesn't match")
+			fmt.Println("T doesn't match, default situation")
 		}
 	}
 	ch <- true

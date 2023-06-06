@@ -9,12 +9,17 @@ import (
 
 func OValidate(s *[]SmallBankTransaction, GE *[][]GraphEdge, group int, v chan map[string]AccountVersion) {
 	order, m := Dfs(*GE, group)
+	lG := len(order)
+	if lG == 0 {
+		log.Println("lG == 0")
+		version := make(map[string]AccountVersion)
+		v <- version
+		return
+	}
 	RWm := NewRWMap(len(m))
 	RWm.m = m
 
-	log.Println("OValidate:group", order, group)
-
-	lG := len(order)
+	log.Println("Before OValidate:group", group)
 	version := make(map[string]AccountVersion)
 	var TxType uint8
 	var TxId uint16
@@ -51,7 +56,7 @@ func OValidate(s *[]SmallBankTransaction, GE *[][]GraphEdge, group int, v chan m
 		}
 	}
 
-	log.Println("v <- version", version, group)
+	log.Println("After OValidate:group. v <- version", group)
 	v <- version
 }
 
@@ -126,10 +131,14 @@ func OAmalgamate(TxId uint16, A string, B string, m map[uint16]string, version m
 		SaveInt = int(temp)
 	} else {
 		SaveValue, err := syncSave.Load(A)
-		Save := SaveValue.(int)
 		//Save, err := mSave[A]
 		if err != true {
 			log.Println(err)
+		}
+		Save, ok := SaveValue.(int)
+		if ok == false {
+			Save = 0
+			log.Println(A, "syncMap panic:", "panic: interface conversion: interface {} is nil, not int")
 		}
 		SaveInt = Save
 	}
@@ -139,10 +148,14 @@ func OAmalgamate(TxId uint16, A string, B string, m map[uint16]string, version m
 		CheckInt = int(temp)
 	} else {
 		CheckValue, err := syncCheck.Load(B)
-		Check := CheckValue.(int)
 		//Check, err := mCheck[B]
 		if err != true {
 			log.Println(err)
+		}
+		Check, ok := CheckValue.(int)
+		if ok == false {
+			Check = 0
+			log.Println(B, "syncMap panic:", "panic: interface conversion: interface {} is nil, not int")
 		}
 		CheckInt = Check
 	}
@@ -209,10 +222,14 @@ func OUpdateBalance(TxId uint16, A string, Balance int, m map[uint16]string, ver
 		CheckInt = int(temp)
 	} else {
 		CheckValue, err := syncCheck.Load(A)
-		Check := CheckValue.(int)
 		//Check, err := mCheck[A]
 		if err != true {
 			log.Println(err)
+		}
+		Check, ok := CheckValue.(int)
+		if ok == false {
+			Check = 0
+			log.Println(A, "syncMap panic:", "panic: interface conversion: interface {} is nil, not int")
 		}
 		CheckInt = Check
 	}
@@ -274,10 +291,14 @@ func OUpdateSaving(TxId uint16, A string, Balance int, m map[uint16]string, vers
 		SaveInt = int(temp)
 	} else {
 		SaveValue, err := syncSave.Load(A)
-		Save := SaveValue.(int)
 		//Save, err := mSave[A]
 		if err != true {
 			log.Println(err)
+		}
+		Save, ok := SaveValue.(int)
+		if ok == false {
+			Save = 0
+			log.Println(A, "syncMap panic:", "panic: interface conversion: interface {} is nil, not int")
 		}
 		SaveInt = Save
 	}
@@ -356,10 +377,14 @@ func OSendPayment(TxId uint16, A string, B string, Balance int, m map[uint16]str
 		CheckIntA = int(temp)
 	} else {
 		CheckValue, err := syncCheck.Load(A)
-		CheckA := CheckValue.(int)
 		//CheckA, err := mCheck[A]
 		if err != true {
 			log.Println(err)
+		}
+		CheckA, ok := CheckValue.(int)
+		if ok == false {
+			CheckA = 0
+			log.Println(A, "syncMap panic:", "panic: interface conversion: interface {} is nil, not int")
 		}
 		CheckIntA = CheckA
 	}
@@ -369,10 +394,14 @@ func OSendPayment(TxId uint16, A string, B string, Balance int, m map[uint16]str
 		CheckIntB = int(temp)
 	} else {
 		CheckValue, err := syncCheck.Load(B)
-		CheckB := CheckValue.(int)
 		//CheckB, err := mCheck[B]
 		if err != true {
 			log.Println(err)
+		}
+		CheckB, ok := CheckValue.(int)
+		if ok == false {
+			CheckB = 0
+			log.Println(B, "syncMap panic:", "panic: interface conversion: interface {} is nil, not int")
 		}
 		CheckIntB = CheckB
 	}
@@ -455,10 +484,14 @@ func OWriteCheck(TxId uint16, A string, Balance int, m map[uint16]string, versio
 		SaveInt = int(temp)
 	} else {
 		SaveValue, err := syncSave.Load(A)
-		Save := SaveValue.(int)
 		//Save, err := mSave[A]
 		if err != true {
 			log.Println(err)
+		}
+		Save, ok := SaveValue.(int)
+		if ok == false {
+			Save = 0
+			log.Println(A, "syncMap panic:", "panic: interface conversion: interface {} is nil, not int")
 		}
 		SaveInt = Save
 	}
@@ -468,10 +501,14 @@ func OWriteCheck(TxId uint16, A string, Balance int, m map[uint16]string, versio
 		CheckInt = int(temp)
 	} else {
 		CheckValue, err := syncCheck.Load(A)
-		Check := CheckValue.(int)
 		//Check, err := mCheck[A]
 		if err != true {
 			log.Println(err)
+		}
+		Check, ok := CheckValue.(int)
+		if ok == false {
+			Check = 0
+			log.Println(A, "syncMap panic:", "panic: interface conversion: interface {} is nil, not int")
 		}
 		CheckInt = Check
 	}

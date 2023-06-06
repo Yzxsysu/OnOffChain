@@ -15,11 +15,10 @@ var MsgV5 = make(chan map[string]AccountVersion, bufferLength)
 var MsgV6 = make(chan map[string]AccountVersion, bufferLength)
 var Version = make(chan map[string]AccountVersion, bufferLength)
 
-func (BCstate *BlockchainState) Validate(s *[]SmallBankTransaction, GE *[][]GraphEdge, u *[][]uint16, group int) {
+func (BCstate *BlockchainState) Validate(s []SmallBankTransaction, GE *[][]GraphEdge, u *[][]uint16, group int) {
 	log.Println("Validate:", group)
 	if len(*u) == 0 {
-		log.Println("len(*u)", 0)
-		return
+		*u = [][]uint16{{0}, {0}, {0}}
 	}
 	v := (*u)[group]
 	ch := make(chan bool, 2)
@@ -34,7 +33,7 @@ func (BCstate *BlockchainState) Validate(s *[]SmallBankTransaction, GE *[][]Grap
 var SetNum string
 var Group int
 
-func (BCstate *BlockchainState) DValidate(s *[]SmallBankTransaction) {
+func (BCstate *BlockchainState) DValidate(s []SmallBankTransaction) {
 	if SetNum == "2f" {
 		if Group == 1 {
 			log.Println("DValidate:", Group)
@@ -45,7 +44,7 @@ func (BCstate *BlockchainState) DValidate(s *[]SmallBankTransaction) {
 			go BCstate.Validate(s, &GE, &u, 1-1)
 			go BCstate.Validate(s, &GE, &u, 2-1)
 			// 可能是这里被阻塞了
-			// offchain的问题
+			// offchain的问题 并且和链上的goroutine的channel相关
 			go BCstate.MergeSV(<-MsgV6)
 			ver1 := <-Version
 			ver2 := <-Version
