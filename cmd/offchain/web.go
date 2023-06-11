@@ -19,7 +19,7 @@ func Subscribe(ip string) {
 }
 
 func SendData(msg interface{}, ip string, port string, path string) {
-	log.Println("Before SendData", path)
+	//log.Println("Before SendData", path)
 	u := url.URL{Scheme: "http", Host: ip + ":" + port, Path: path}
 	jsonData, err := json.Marshal(msg)
 	if err != nil {
@@ -36,7 +36,7 @@ func SendData(msg interface{}, ip string, port string, path string) {
 	if err != nil {
 		log.Println("resp err:", err)
 	}
-	log.Println("After SendData", path)
+	//log.Println("After SendData", path)
 }
 
 //func SendData(msg interface{}, ip string, port string, path string) {
@@ -94,7 +94,7 @@ func WSHandlerTx(w http.ResponseWriter, r *http.Request) {
 	} else {
 		http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
 	}
-	log.Println("Tx send to channel")
+	//log.Println("Tx send to channel")
 }
 
 func WSHandlerS(w http.ResponseWriter, r *http.Request) {
@@ -118,7 +118,7 @@ func WSHandlerS(w http.ResponseWriter, r *http.Request) {
 	} else {
 		http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
 	}
-	log.Println("Sub send to channel")
+	//log.Println("Sub send to channel")
 }
 
 func WSHandlerSV(w http.ResponseWriter, r *http.Request) {

@@ -7,9 +7,9 @@ import (
 
 func (BCstate *BlockchainState) VValidate(s []SmallBankTransaction, v *[]uint16, ch chan bool) {
 	l := len(*v)
-	log.Println("VValidate len:", l)
+	//log.Println("VValidate len:", l)
 	if l == 0 || (*v)[0] == 0 {
-		log.Println("(*v)[0] == 0, and l = ", l)
+		//log.Println("(*v)[0] == 0, and l = ", l)
 		ch <- true
 		return
 	}

@@ -6,9 +6,9 @@ import (
 )
 
 func OVValidate(s *[]SmallBankTransaction, u *[][]uint16, group int, v chan map[string]AccountVersion) {
-	log.Println("Before OVValidate", group)
+	//log.Println("Before OVValidate", group)
 	if len(*u) == 0 {
-		log.Println("OVValidate", "v <- version", "len(*u) == 0", group)
+		//log.Println("OVValidate", "v <- version", "len(*u) == 0", group)
 		version := make(map[string]AccountVersion)
 		v <- version
 		return
@@ -42,7 +42,7 @@ func OVValidate(s *[]SmallBankTransaction, u *[][]uint16, group int, v chan map[
 		}
 	}
 
-	log.Println("After OVValidate v <- version", group)
+	//log.Println("After OVValidate v <- version", group)
 	v <- version
 }
 
@@ -71,7 +71,7 @@ func OVAmalgamate(A string, B string, version map[string]AccountVersion) {
 	Save, ok := SaveValue.(int)
 	if ok == false {
 		Save = 0
-		log.Println(A, "syncMap panic:", "panic: interface conversion: interface {} is nil, not int")
+		//log.Println(A, "syncMap panic:", "panic: interface conversion: interface {} is nil, not int")
 	}
 	SaveInt = Save
 
@@ -83,7 +83,7 @@ func OVAmalgamate(A string, B string, version map[string]AccountVersion) {
 	Check, ok := CheckValue.(int)
 	if ok == false {
 		Check = 0
-		log.Println(B, "syncMap panic:", "panic: interface conversion: interface {} is nil, not int")
+		//log.Println(B, "syncMap panic:", "panic: interface conversion: interface {} is nil, not int")
 	}
 	CheckInt = Check
 
@@ -117,7 +117,7 @@ func OVUpdateBalance(A string, Balance int, version map[string]AccountVersion) {
 	Check, ok := CheckValue.(int)
 	if ok == false {
 		Check = 0
-		log.Println(A, "syncMap panic:", "panic: interface conversion: interface {} is nil, not int")
+		//log.Println(A, "syncMap panic:", "panic: interface conversion: interface {} is nil, not int")
 	}
 	CheckInt = Check
 
@@ -146,7 +146,7 @@ func OVUpdateSaving(A string, Balance int, version map[string]AccountVersion) {
 	Save, ok := SaveValue.(int)
 	if ok == false {
 		Save = 0
-		log.Println(A, "syncMap panic:", "panic: interface conversion: interface {} is nil, not int")
+		//log.Println(A, "syncMap panic:", "panic: interface conversion: interface {} is nil, not int")
 	}
 	SaveInt = Save
 
@@ -180,7 +180,7 @@ func OVSendPayment(A string, B string, Balance int, version map[string]AccountVe
 	CheckA, ok := CheckValueA.(int)
 	if ok == false {
 		CheckA = 0
-		log.Println(A, "syncMap panic:", "panic: interface conversion: interface {} is nil, not int")
+		//log.Println(A, "syncMap panic:", "panic: interface conversion: interface {} is nil, not int")
 	}
 	CheckIntA = CheckA
 
@@ -192,7 +192,7 @@ func OVSendPayment(A string, B string, Balance int, version map[string]AccountVe
 	CheckB, ok := CheckValueB.(int)
 	if ok == false {
 		CheckB = 0
-		log.Println(B, "syncMap panic:", "panic: interface conversion: interface {} is nil, not int")
+		//log.Println(B, "syncMap panic:", "panic: interface conversion: interface {} is nil, not int")
 	}
 	CheckIntB = CheckB
 

@@ -60,7 +60,7 @@ const (
 
 func GenerateGraph(txResult <-chan TxResult, pq *queue.PriorityQueue, visited []bool, length int) map[uint16][]Vertex {
 	m := make(map[uint16][]Vertex)
-	log.Println("Before GenerateGraph")
+	//log.Println("Before GenerateGraph")
 	for l := 0; l < length; l++ {
 		t := <-txResult
 		num := len(t.AccountName)
@@ -108,7 +108,7 @@ func GenerateGraph(txResult <-chan TxResult, pq *queue.PriorityQueue, visited []
 			}
 		}
 	}
-	log.Println("After GenerateGraph")
+	//log.Println("After GenerateGraph")
 	//log.Println(m)
 	return m
 	//for t := range txResult {
@@ -178,14 +178,14 @@ func CutGraph(m map[uint16][]Vertex, pq *queue.PriorityQueue, group int, visited
 	//	log.Println("After SubV")
 	//}()
 
-	log.Println("Before Subv")
+	//log.Println("Before Subv")
 	for i := 1; i < l; i++ {
 		if visited[i] == false {
 			s = append(s, uint16(i))
 		}
 	}
 	SubV = SplitSlice(s, group)
-	log.Println("After SubV")
+	//log.Println("After SubV")
 	l = l - len(s)
 	// init num of the group
 	groupNUm := 1
@@ -193,7 +193,7 @@ func CutGraph(m map[uint16][]Vertex, pq *queue.PriorityQueue, group int, visited
 
 	// init the num of tx
 	txNum := 1
-	log.Println("Before Sub")
+	//log.Println("Before Sub")
 	for !pq.Empty() {
 		if groupNUm == group {
 			qLen := pq.Len()

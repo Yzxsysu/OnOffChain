@@ -31,9 +31,9 @@ func WSHandlerS(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			fmt.Println(err)
 		}
-		log.Println("Sub:", Sub)
+		//log.Println("Sub:", Sub)
 		application.MsgS <- Sub
-		log.Println("send to channel")
+		//log.Println("send to channel")
 		_, err = w.Write([]byte("ok"))
 		if err != nil {
 			log.Println(err)
@@ -56,9 +56,9 @@ func WSHandlerSV(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			fmt.Println(err)
 		}
-		log.Println("SubV:", SubV)
+		//log.Println("SubV:", SubV)
 		application.MsgSV <- SubV
-		log.Println("send to channel")
+		//log.Println("send to channel")
 		_, err = w.Write([]byte("ok"))
 		if err != nil {
 			log.Println(err)
@@ -81,9 +81,9 @@ func WSHandler1(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			fmt.Println(err)
 		}
-		log.Println("V1:", V1)
+		//log.Println("V1:", V1)
 		application.MsgV1 <- V1
-		log.Println("send to channel")
+		//log.Println("send to channel")
 		_, err = w.Write([]byte("ok"))
 		if err != nil {
 			log.Println(err)
@@ -106,9 +106,9 @@ func WSHandler2(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			fmt.Println(err)
 		}
-		log.Println("V2:", V2)
+		//log.Println("V2:", V2)
 		application.MsgV2 <- V2
-		log.Println("send to channel")
+		//log.Println("send to channel")
 		_, err = w.Write([]byte("ok"))
 		if err != nil {
 			log.Println(err)

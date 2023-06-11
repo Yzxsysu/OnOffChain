@@ -2,7 +2,6 @@ package main
 
 import (
 	"flag"
-	"log"
 	"net/http"
 	"os"
 	"os/signal"
@@ -67,12 +66,12 @@ func main() {
 func Validate() {
 	for {
 		s := <-Txs
-		log.Println("s := <- Txs")
+		//log.Println("s := <- Txs")
 		// init mChan
 		mS := <-MsgS
-		log.Println("mS := <-MsgS")
+		//log.Println("mS := <-MsgS")
 		mSV := <-MsgSV
-		log.Println("mSV := <-MsgSV")
+		//log.Println("mSV := <-MsgSV")
 		go OValidate(&s, &mS, 0, mV1)
 		go OValidate(&s, &mS, 1, mV2)
 		go OValidate(&s, &mS, 2, mV3)
@@ -84,7 +83,7 @@ func Validate() {
 }
 
 func Merge() {
-	log.Println("Before Merge: ")
+	//log.Println("Before Merge: ")
 	m1 := <-mV1
 	m2 := <-mV2
 	m3 := <-mV3
@@ -216,7 +215,7 @@ func Merge() {
 		syncSave.Store(key, value.Save)
 		syncCheck.Store(key, value.Check)
 	}
-	log.Println("After Merge: ")
+	//log.Println("After Merge: ")
 }
 
 func SplitToThree(ports string) ([]string, []string, []string) {

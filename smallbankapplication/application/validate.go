@@ -16,7 +16,7 @@ var MsgV6 = make(chan map[string]AccountVersion, bufferLength)
 var Version = make(chan map[string]AccountVersion, bufferLength)
 
 func (BCstate *BlockchainState) Validate(s []SmallBankTransaction, GE *[][]GraphEdge, u *[][]uint16, group int) {
-	log.Println("Validate:", group)
+	//log.Println("Validate:", group)
 	if len(*u) == 0 {
 		*u = [][]uint16{{0}, {0}, {0}}
 	}
@@ -27,7 +27,7 @@ func (BCstate *BlockchainState) Validate(s []SmallBankTransaction, GE *[][]Graph
 	// go OffChainExecute
 	<-ch
 	<-ch
-	log.Println("Validate end", Group)
+	//log.Println("Validate end", Group)
 }
 
 var SetNum string
@@ -36,11 +36,11 @@ var Group int
 func (BCstate *BlockchainState) DValidate(s []SmallBankTransaction) {
 	if SetNum == "2f" {
 		if Group == 1 {
-			log.Println("DValidate:", Group)
+			//log.Println("DValidate:", Group)
 			GE := <-MsgS
-			log.Println("GE:", GE)
+			//log.Println("GE:", GE)
 			u := <-MsgSV
-			log.Println("u:", u)
+			//log.Println("u:", u)
 			go BCstate.Validate(s, &GE, &u, 1-1)
 			go BCstate.Validate(s, &GE, &u, 2-1)
 			// 可能是这里被阻塞了
@@ -117,7 +117,7 @@ func NewAccountVersion() AccountVersion {
 }
 
 func (BCstate *BlockchainState) MergeS(OriginV map[string]AccountVersion, NewV map[string]AccountVersion) {
-	log.Println("MergeS:", Group)
+	//log.Println("MergeS:", Group)
 	for key, value := range NewV {
 		_, err := OriginV[key]
 		if err != true {
@@ -145,11 +145,11 @@ func (BCstate *BlockchainState) MergeS(OriginV map[string]AccountVersion, NewV m
 			OriginV[key] = tempV
 		}
 	}
-	log.Println("MergeS end")
+	//log.Println("MergeS end")
 }
 
 func (BCstate *BlockchainState) MergeS2(OriginV map[string]AccountVersion, NewV1 map[string]AccountVersion, NewV2 map[string]AccountVersion) {
-	log.Println("MergeS2:", Group)
+	//log.Println("MergeS2:", Group)
 	for key, value := range NewV1 {
 		_, err := OriginV[key]
 		if err != true {
@@ -204,11 +204,11 @@ func (BCstate *BlockchainState) MergeS2(OriginV map[string]AccountVersion, NewV1
 			OriginV[key] = tempV
 		}
 	}
-	log.Println("MergeS2 end")
+	//log.Println("MergeS2 end")
 }
 
 func (BCstate *BlockchainState) MergeSV(NewV map[string]AccountVersion) {
-	log.Println("MergeSV", Group)
+	//log.Println("MergeSV", Group)
 	for key, value := range NewV {
 		err := BCstate.SavingStore.Set([]byte(key), IntToBytes(value.Save))
 		if err != nil {

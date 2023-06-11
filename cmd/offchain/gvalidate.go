@@ -11,7 +11,7 @@ func OValidate(s *[]SmallBankTransaction, GE *[][]GraphEdge, group int, v chan m
 	order, m := Dfs(*GE, group)
 	lG := len(order)
 	if lG == 0 {
-		log.Println("lG == 0")
+		//log.Println("lG == 0")
 		version := make(map[string]AccountVersion)
 		v <- version
 		return
@@ -19,7 +19,7 @@ func OValidate(s *[]SmallBankTransaction, GE *[][]GraphEdge, group int, v chan m
 	RWm := NewRWMap(len(m))
 	RWm.m = m
 
-	log.Println("Before OValidate:group", group)
+	//log.Println("Before OValidate:group", group)
 	version := make(map[string]AccountVersion)
 	var TxType uint8
 	var TxId uint16
@@ -56,7 +56,7 @@ func OValidate(s *[]SmallBankTransaction, GE *[][]GraphEdge, group int, v chan m
 		}
 	}
 
-	log.Println("After OValidate:group. v <- version", group)
+	//log.Println("After OValidate:group. v <- version", group)
 	v <- version
 }
 
@@ -90,7 +90,7 @@ func OAmalgamate(TxId uint16, A string, B string, m map[uint16]string, version m
 		s1 := strings.Split(v, "<")
 		l := len(s1)
 		if l == 0 {
-			log.Println("D is nil when validating graph edge")
+			//log.Println("D is nil when validating graph edge")
 		}
 		// "name="1",SaveVersion=10,ConsistentSaveValue=2"
 		for _, elements := range s1 {
@@ -138,7 +138,7 @@ func OAmalgamate(TxId uint16, A string, B string, m map[uint16]string, version m
 		Save, ok := SaveValue.(int)
 		if ok == false {
 			Save = 0
-			log.Println(A, "syncMap panic:", "panic: interface conversion: interface {} is nil, not int")
+			//log.Println(A, "syncMap panic:", "panic: interface conversion: interface {} is nil, not int")
 		}
 		SaveInt = Save
 	}
@@ -155,7 +155,7 @@ func OAmalgamate(TxId uint16, A string, B string, m map[uint16]string, version m
 		Check, ok := CheckValue.(int)
 		if ok == false {
 			Check = 0
-			log.Println(B, "syncMap panic:", "panic: interface conversion: interface {} is nil, not int")
+			//log.Println(B, "syncMap panic:", "panic: interface conversion: interface {} is nil, not int")
 		}
 		CheckInt = Check
 	}
@@ -191,7 +191,7 @@ func OUpdateBalance(TxId uint16, A string, Balance int, m map[uint16]string, ver
 		s1 := strings.Split(v, "<")
 		l := len(s1)
 		if l == 0 {
-			log.Println("D is nil when validating graph edge")
+			//log.Println("D is nil when validating graph edge")
 		}
 		// "name="1",CheckVersion=10,ConsistentCheckValue=2"
 		for _, elements := range s1 {
@@ -229,7 +229,7 @@ func OUpdateBalance(TxId uint16, A string, Balance int, m map[uint16]string, ver
 		Check, ok := CheckValue.(int)
 		if ok == false {
 			Check = 0
-			log.Println(A, "syncMap panic:", "panic: interface conversion: interface {} is nil, not int")
+			//log.Println(A, "syncMap panic:", "panic: interface conversion: interface {} is nil, not int")
 		}
 		CheckInt = Check
 	}
@@ -261,7 +261,7 @@ func OUpdateSaving(TxId uint16, A string, Balance int, m map[uint16]string, vers
 		s1 := strings.Split(v, "<")
 		l := len(s1)
 		if l == 0 {
-			log.Println("D is nil when validating graph edge")
+			//log.Println("D is nil when validating graph edge")
 		}
 		// "name="1",SaveVersion=10,ConsistentSaveValue=2"
 		for _, elements := range s1 {
@@ -298,7 +298,7 @@ func OUpdateSaving(TxId uint16, A string, Balance int, m map[uint16]string, vers
 		Save, ok := SaveValue.(int)
 		if ok == false {
 			Save = 0
-			log.Println(A, "syncMap panic:", "panic: interface conversion: interface {} is nil, not int")
+			//log.Println(A, "syncMap panic:", "panic: interface conversion: interface {} is nil, not int")
 		}
 		SaveInt = Save
 	}
@@ -338,7 +338,7 @@ func OSendPayment(TxId uint16, A string, B string, Balance int, m map[uint16]str
 		s1 := strings.Split(v, "<")
 		l := len(s1)
 		if l == 0 {
-			log.Println("D is nil when validating graph edge")
+			//log.Println("D is nil when validating graph edge")
 		}
 		// "name="1",CheckVersion=10,ConsistentCheckValue=2"
 		for _, elements := range s1 {
@@ -384,7 +384,7 @@ func OSendPayment(TxId uint16, A string, B string, Balance int, m map[uint16]str
 		CheckA, ok := CheckValue.(int)
 		if ok == false {
 			CheckA = 0
-			log.Println(A, "syncMap panic:", "panic: interface conversion: interface {} is nil, not int")
+			//log.Println(A, "syncMap panic:", "panic: interface conversion: interface {} is nil, not int")
 		}
 		CheckIntA = CheckA
 	}
@@ -401,7 +401,7 @@ func OSendPayment(TxId uint16, A string, B string, Balance int, m map[uint16]str
 		CheckB, ok := CheckValue.(int)
 		if ok == false {
 			CheckB = 0
-			log.Println(B, "syncMap panic:", "panic: interface conversion: interface {} is nil, not int")
+			//log.Println(B, "syncMap panic:", "panic: interface conversion: interface {} is nil, not int")
 		}
 		CheckIntB = CheckB
 	}
@@ -444,7 +444,7 @@ func OWriteCheck(TxId uint16, A string, Balance int, m map[uint16]string, versio
 		s1 := strings.Split(v, "<")
 		l := len(s1)
 		if l == 0 {
-			log.Println("D is nil when validating graph edge")
+			//log.Println("D is nil when validating graph edge")
 		}
 		// "name="1",SaveVersion=10,ConsistentSaveValue=2"
 		for _, elements := range s1 {

@@ -86,7 +86,7 @@ func RWOAmalgamate(TxId uint16, A string, B string, m *RWMap, version map[string
 		s1 := strings.Split(v, "<")
 		l := len(s1)
 		if l == 0 {
-			log.Println("D is nil when validating graph edge")
+			//log.Println("D is nil when validating graph edge")
 		}
 		// "name="1",SaveVersion=10,ConsistentSaveValue=2"
 		for _, elements := range s1 {
@@ -134,7 +134,7 @@ func RWOAmalgamate(TxId uint16, A string, B string, m *RWMap, version map[string
 		Save, ok := SaveValue.(int)
 		if ok == false {
 			Save = 0
-			log.Println(A, "syncMap panic:", "panic: interface conversion: interface {} is nil, not int")
+			//log.Println(A, "syncMap panic:", "panic: interface conversion: interface {} is nil, not int")
 		}
 		SaveInt = Save
 	}
@@ -151,7 +151,7 @@ func RWOAmalgamate(TxId uint16, A string, B string, m *RWMap, version map[string
 		Check, ok := CheckValue.(int)
 		if ok == false {
 			Check = 0
-			log.Println(B, "syncMap panic:", "panic: interface conversion: interface {} is nil, not int")
+			//log.Println(B, "syncMap panic:", "panic: interface conversion: interface {} is nil, not int")
 		}
 		CheckInt = Check
 	}
@@ -187,7 +187,7 @@ func RWOUpdateBalance(TxId uint16, A string, Balance int, m *RWMap, version map[
 		s1 := strings.Split(v, "<")
 		l := len(s1)
 		if l == 0 {
-			log.Println("D is nil when validating graph edge")
+			//log.Println("D is nil when validating graph edge")
 		}
 		// "name="1",CheckVersion=10,ConsistentCheckValue=2"
 		for _, elements := range s1 {
@@ -225,7 +225,7 @@ func RWOUpdateBalance(TxId uint16, A string, Balance int, m *RWMap, version map[
 		Check, ok := CheckValue.(int)
 		if ok == false {
 			Check = 0
-			log.Println(A, "syncMap panic:", "panic: interface conversion: interface {} is nil, not int")
+			//log.Println(A, "syncMap panic:", "panic: interface conversion: interface {} is nil, not int")
 		}
 		CheckInt = Check
 	}
@@ -259,7 +259,7 @@ func RWOUpdateSaving(TxId uint16, A string, Balance int, m *RWMap, version map[s
 		s1 := strings.Split(v, "<")
 		l := len(s1)
 		if l == 0 {
-			log.Println("D is nil when validating graph edge")
+			//log.Println("D is nil when validating graph edge")
 		}
 		// "name="1",SaveVersion=10,ConsistentSaveValue=2"
 		for _, elements := range s1 {
@@ -296,7 +296,7 @@ func RWOUpdateSaving(TxId uint16, A string, Balance int, m *RWMap, version map[s
 		Save, ok := SaveValue.(int)
 		if ok == false {
 			Save = 0
-			log.Println(A, "syncMap panic:", "panic: interface conversion: interface {} is nil, not int")
+			//log.Println(A, "syncMap panic:", "panic: interface conversion: interface {} is nil, not int")
 		}
 		SaveInt = Save
 	}
@@ -336,7 +336,7 @@ func RWOSendPayment(TxId uint16, A string, B string, Balance int, m *RWMap, vers
 		s1 := strings.Split(v, "<")
 		l := len(s1)
 		if l == 0 {
-			log.Println("D is nil when validating graph edge")
+			//log.Println("D is nil when validating graph edge")
 		}
 		// "name="1",CheckVersion=10,ConsistentCheckValue=2"
 		for _, elements := range s1 {
@@ -382,7 +382,7 @@ func RWOSendPayment(TxId uint16, A string, B string, Balance int, m *RWMap, vers
 		CheckA, ok := CheckValue.(int)
 		if ok == false {
 			CheckA = 0
-			log.Println(A, "syncMap panic:", "panic: interface conversion: interface {} is nil, not int")
+			//log.Println(A, "syncMap panic:", "panic: interface conversion: interface {} is nil, not int")
 		}
 		CheckIntA = CheckA
 	}
