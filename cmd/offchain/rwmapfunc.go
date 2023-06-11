@@ -127,10 +127,14 @@ func RWOAmalgamate(TxId uint16, A string, B string, m *RWMap, version map[string
 		SaveInt = int(temp)
 	} else {
 		SaveValue, err := syncSave.Load(A)
-		Save := SaveValue.(int)
 		//Save, err := mSave[A]
 		if err != true {
 			log.Println(err)
+		}
+		Save, ok := SaveValue.(int)
+		if ok == false {
+			Save = 0
+			log.Println(A, "syncMap panic:", "panic: interface conversion: interface {} is nil, not int")
 		}
 		SaveInt = Save
 	}
@@ -140,10 +144,14 @@ func RWOAmalgamate(TxId uint16, A string, B string, m *RWMap, version map[string
 		CheckInt = int(temp)
 	} else {
 		CheckValue, err := syncCheck.Load(B)
-		Check := CheckValue.(int)
 		//Check, err := mCheck[B]
 		if err != true {
 			log.Println(err)
+		}
+		Check, ok := CheckValue.(int)
+		if ok == false {
+			Check = 0
+			log.Println(B, "syncMap panic:", "panic: interface conversion: interface {} is nil, not int")
 		}
 		CheckInt = Check
 	}
@@ -210,10 +218,14 @@ func RWOUpdateBalance(TxId uint16, A string, Balance int, m *RWMap, version map[
 		CheckInt = int(temp)
 	} else {
 		CheckValue, err := syncCheck.Load(A)
-		Check := CheckValue.(int)
 		//Check, err := mCheck[A]
 		if err != true {
 			log.Println(err)
+		}
+		Check, ok := CheckValue.(int)
+		if ok == false {
+			Check = 0
+			log.Println(A, "syncMap panic:", "panic: interface conversion: interface {} is nil, not int")
 		}
 		CheckInt = Check
 	}
@@ -277,10 +289,14 @@ func RWOUpdateSaving(TxId uint16, A string, Balance int, m *RWMap, version map[s
 		SaveInt = int(temp)
 	} else {
 		SaveValue, err := syncSave.Load(A)
-		Save := SaveValue.(int)
 		//Save, err := mSave[A]
 		if err != true {
 			log.Println(err)
+		}
+		Save, ok := SaveValue.(int)
+		if ok == false {
+			Save = 0
+			log.Println(A, "syncMap panic:", "panic: interface conversion: interface {} is nil, not int")
 		}
 		SaveInt = Save
 	}
@@ -359,10 +375,14 @@ func RWOSendPayment(TxId uint16, A string, B string, Balance int, m *RWMap, vers
 		CheckIntA = int(temp)
 	} else {
 		CheckValue, err := syncCheck.Load(A)
-		CheckA := CheckValue.(int)
 		//CheckA, err := mCheck[A]
 		if err != true {
 			log.Println(err)
+		}
+		CheckA, ok := CheckValue.(int)
+		if ok == false {
+			CheckA = 0
+			log.Println(A, "syncMap panic:", "panic: interface conversion: interface {} is nil, not int")
 		}
 		CheckIntA = CheckA
 	}
@@ -372,10 +392,14 @@ func RWOSendPayment(TxId uint16, A string, B string, Balance int, m *RWMap, vers
 		CheckIntB = int(temp)
 	} else {
 		CheckValue, err := syncCheck.Load(B)
-		CheckB := CheckValue.(int)
 		//CheckB, err := mCheck[B]
 		if err != true {
 			log.Println(err)
+		}
+		CheckB, ok := CheckValue.(int)
+		if ok == false {
+			CheckB = 0
+			log.Println(B, "syncMap panic:", "panic: interface conversion: interface {} is nil, not int")
 		}
 		CheckIntB = CheckB
 	}
@@ -458,10 +482,14 @@ func RWOWriteCheck(TxId uint16, A string, Balance int, m *RWMap, version map[str
 		SaveInt = int(temp)
 	} else {
 		SaveValue, err := syncSave.Load(A)
-		Save := SaveValue.(int)
 		//Save, err := mSave[A]
 		if err != true {
 			log.Println(err)
+		}
+		Save, ok := SaveValue.(int)
+		if ok == false {
+			Save = 0
+			log.Println(A, "syncMap panic:", "panic: interface conversion: interface {} is nil, not int")
 		}
 		SaveInt = Save
 	}
@@ -471,10 +499,14 @@ func RWOWriteCheck(TxId uint16, A string, Balance int, m *RWMap, version map[str
 		CheckInt = int(temp)
 	} else {
 		CheckValue, err := syncCheck.Load(A)
-		Check := CheckValue.(int)
 		//Check, err := mCheck[A]
 		if err != true {
 			log.Println(err)
+		}
+		Check, ok := CheckValue.(int)
+		if ok == false {
+			Check = 0
+			log.Println(A, "syncMap panic:", "panic: interface conversion: interface {} is nil, not int")
 		}
 		CheckInt = Check
 	}

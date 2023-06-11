@@ -82,8 +82,13 @@ func (z *ZipfDistribution) Uint64() ([]int, []int) {
 	for i := 0; i < len(from); i++ {
 		excludeNum := RandWithout(1, int(z.Size), from[i])
 		to[i] = excludeNum
+		for from[i] == to[i] {
+			to[i] = RandWithout(1, int(z.Size), from[i])
+		}
+		if from[i] > to[i] {
+			from[i], to[i] = to[i], from[i]
+		}
 	}
-
 	return from, to
 }
 

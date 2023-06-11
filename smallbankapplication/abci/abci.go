@@ -31,6 +31,10 @@ func NewSmallBankApplication(node *application.BlockchainState) *SmallBankApplic
 func (app *SmallBankApplication) BeginBlock(req abcitypes.RequestBeginBlock) abcitypes.ResponseBeginBlock {
 	//app.currentBatch = app.db.NewTransaction(true)
 	log.Println("BeginBlock")
+	if app.Node.Height == 0 {
+		app.Node.Height++
+		return abcitypes.ResponseBeginBlock{}
+	}
 	return abcitypes.ResponseBeginBlock{}
 }
 
@@ -64,8 +68,11 @@ func (app SmallBankApplication) CheckTx(req abcitypes.RequestCheckTx) abcitypes.
 	// Leader execute and send the sub graph
 	//var events []abcitypes.Event
 	if app.Node.Leader {
+		log.Println("Leader Check Tx Start")
 		//Sub, SubV, ReceiveTx := app.Node.ResolveAndExecuteTx(&req.Tx)
+		log.Println("Before ResolveAndExecuteTxWithSyncMap")
 		Sub, SubV, ReceiveTx := app.Node.ResolveAndExecuteTxWithSyncMap(&req.Tx)
+		log.Println("After ResolveAndExecuteTxWithSyncMap")
 		go SendData(Sub, OffChainIp, OffChainPort, "/S")
 		go SendData(SubV, OffChainIp, OffChainPort, "/SV")
 		go SendData(ReceiveTx, OffChainIp, OffChainPort, "/Tx")
@@ -73,15 +80,19 @@ func (app SmallBankApplication) CheckTx(req abcitypes.RequestCheckTx) abcitypes.
 			go SendData(Sub, Ips[i], port, "/S")
 			go SendData(SubV, Ips[i], port, "/SV")
 		}
+		log.Println("Leader Check Tx End")
 	}
-	return abcitypes.ResponseCheckTx{Code: abcicode.CodeTypeOK, GasUsed: 0}
+	return abcitypes.ResponseCheckTx{Code: abcicode.CodeTypeOK, GasUsed: 1}
 }
 
 // 这里我们创建了一个batch，它将存储block的交易。
 func (app *SmallBankApplication) DeliverTx(req abcitypes.RequestDeliverTx) abcitypes.ResponseDeliverTx {
 	if !app.Node.Leader {
-		ReceiveTx := application.ResolveTx(&req.Tx)
-		app.Node.DValidate(&ReceiveTx)
+		log.Println("replica DeliverTx")
+		ReceiveTx := application.ResolveTx(req.Tx)
+		app.Node.DValidate(ReceiveTx)
+	} else {
+		log.Println("Leader doesn't need to DeliverTx")
 	}
 	return abcitypes.ResponseDeliverTx{Code: abcicode.CodeTypeOK}
 }

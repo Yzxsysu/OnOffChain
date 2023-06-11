@@ -17,8 +17,9 @@ const (
 	BalanceString string = "B"
 )
 
-func ResolveTx(request *[]byte) []SmallBankTransaction {
-	txs := bytes.Split(*request, []byte(">"))
+func ResolveTx(request []byte) []SmallBankTransaction {
+	log.Println("Before ReceiveTx:")
+	txs := bytes.Split(request, []byte(">"))
 	l := len(txs)
 	if l == 0 {
 		log.Println("the tx is nil")
@@ -53,6 +54,7 @@ func ResolveTx(request *[]byte) []SmallBankTransaction {
 		}
 		ReceiveTx[i] = tx
 	}
+	log.Println("After ReceiveTx:")
 	return ReceiveTx
 }
 
@@ -96,6 +98,7 @@ func (BCstate *BlockchainState) ResolveAndExecuteTx(request *[]byte) ([][]GraphE
 	var To []byte
 	var Balance int
 
+	l = len(ReceiveTx)
 	txResult := make(chan TxResult, l)
 	AccountDataMap = sync.Map{}
 	for i := 0; i < l; i++ {
@@ -139,6 +142,8 @@ func (BCstate *BlockchainState) ResolveAndExecuteTxWithSyncMap(request *[]byte) 
 	if l == 0 {
 		log.Println("the tx is nil")
 	}
+
+	log.Println("Before ReceiveTx")
 	ReceiveTx := make([]SmallBankTransaction, l)
 	for i, elements := range txs {
 		var tx SmallBankTransaction
@@ -165,13 +170,14 @@ func (BCstate *BlockchainState) ResolveAndExecuteTxWithSyncMap(request *[]byte) 
 		}
 		ReceiveTx[i] = tx
 	}
-
+	log.Println("After ReceiveTx")
 	var TxType uint8
 	var TxId uint16
 	var From []byte
 	var To []byte
 	var Balance int
 
+	log.Println("Before txResult")
 	txResult := make(chan TxResult, l)
 	sMap := sync.Map{}
 	for i := 0; i < l; i++ {
@@ -199,10 +205,13 @@ func (BCstate *BlockchainState) ResolveAndExecuteTxWithSyncMap(request *[]byte) 
 			fmt.Println("T doesn't match")
 		}
 	}
+	log.Println("After txResult")
 
 	pq := queue.NewPriorityQueue(l, true)
 	visited := make([]bool, l+1)
+	log.Println("Before CutGraph")
 	Sub, SubV := CutGraph(GenerateGraph(txResult, pq, visited, l), pq, 3, visited)
+	log.Println("After CutGraph")
 	close(txResult)
 	// need to send to on chain and other off chain
 	return Sub, SubV, ReceiveTx

@@ -56,7 +56,7 @@ func main() {
 	http.HandleFunc("/S", WSHandlerS)
 	http.HandleFunc("/SV", WSHandlerSV)
 	http.HandleFunc("/Tx", WSHandlerTx)
-	//go http.ListenAndServe()
+
 	go Validate()
 	go Subscribe(offChainIp + ":" + offChainPort)
 	c := make(chan os.Signal, 1)
@@ -84,6 +84,7 @@ func Validate() {
 }
 
 func Merge() {
+	log.Println("Before Merge: ")
 	m1 := <-mV1
 	m2 := <-mV2
 	m3 := <-mV3
@@ -215,6 +216,7 @@ func Merge() {
 		syncSave.Store(key, value.Save)
 		syncCheck.Store(key, value.Check)
 	}
+	log.Println("After Merge: ")
 }
 
 func SplitToThree(ports string) ([]string, []string, []string) {

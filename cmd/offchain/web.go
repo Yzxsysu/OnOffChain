@@ -19,6 +19,7 @@ func Subscribe(ip string) {
 }
 
 func SendData(msg interface{}, ip string, port string, path string) {
+	log.Println("Before SendData", path)
 	u := url.URL{Scheme: "http", Host: ip + ":" + port, Path: path}
 	jsonData, err := json.Marshal(msg)
 	if err != nil {
@@ -35,6 +36,7 @@ func SendData(msg interface{}, ip string, port string, path string) {
 	if err != nil {
 		log.Println("resp err:", err)
 	}
+	log.Println("After SendData", path)
 }
 
 //func SendData(msg interface{}, ip string, port string, path string) {
@@ -84,9 +86,7 @@ func WSHandlerTx(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			fmt.Println(err)
 		}
-		log.Println("Tx:", Tx)
 		Txs <- Tx
-		log.Println("send to channel")
 		_, err = w.Write([]byte("off ok"))
 		if err != nil {
 			log.Println(err)
@@ -94,6 +94,7 @@ func WSHandlerTx(w http.ResponseWriter, r *http.Request) {
 	} else {
 		http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
 	}
+	log.Println("Tx send to channel")
 }
 
 func WSHandlerS(w http.ResponseWriter, r *http.Request) {
@@ -109,9 +110,7 @@ func WSHandlerS(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			fmt.Println(err)
 		}
-		log.Println("Sub:", Sub)
 		MsgS <- Sub
-		log.Println("send to channel")
 		_, err = w.Write([]byte("off Sub ok"))
 		if err != nil {
 			log.Println(err)
@@ -119,6 +118,7 @@ func WSHandlerS(w http.ResponseWriter, r *http.Request) {
 	} else {
 		http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
 	}
+	log.Println("Sub send to channel")
 }
 
 func WSHandlerSV(w http.ResponseWriter, r *http.Request) {
@@ -134,9 +134,7 @@ func WSHandlerSV(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			fmt.Println(err)
 		}
-		log.Println("SubV:", SubV)
 		MsgSV <- SubV
-		log.Println("send to channel")
 		_, err = w.Write([]byte("off SubV ok"))
 		if err != nil {
 			log.Println(err)
@@ -144,4 +142,5 @@ func WSHandlerSV(w http.ResponseWriter, r *http.Request) {
 	} else {
 		http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
 	}
+	log.Println("SubV send to channel")
 }

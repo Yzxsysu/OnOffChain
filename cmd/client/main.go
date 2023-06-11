@@ -10,17 +10,25 @@ import (
 
 // tx format: 127.0.0.1:20057/broadcast_tx_commit?tx="T=3,I=1,F=1,O=3,B=156>T=1,I=2,F=2,O=1,B=190"
 func main() {
+
+	txs := application.GenerateTx(1000, 1000, 0.1)
+	fmt.Println(txs)
 	for {
 		var err error
-		txs := application.GenerateTx(1000, 1000, 1)
 		str := ""
+		//txs := application.GenerateTx(1000, 1000, 1)
+
 		l := len(txs)
+		fmt.Println("l =", l)
 		for i, tx := range txs {
+			currentTime := time.Now()
+			t := currentTime.Nanosecond()
 			str += "T=" + strconv.Itoa(int(tx.T))
 			str += "," + "I=" + strconv.Itoa(int(tx.I))
 			str += "," + "F=" + string(tx.F)
 			str += "," + "O=" + string(tx.O)
 			str += "," + "B=" + strconv.Itoa(tx.B)
+			str += "," + "t=" + strconv.Itoa(t)
 			if i != l-1 {
 				str += ">"
 			}
@@ -35,6 +43,6 @@ func main() {
 				fmt.Println(err)
 			}
 		}(str)
-		time.Sleep(time.Millisecond * 400)
+		time.Sleep(time.Millisecond * 200)
 	}
 }

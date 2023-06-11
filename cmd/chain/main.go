@@ -11,6 +11,7 @@ import (
 	"github.com/tendermint/tendermint/types"
 	"log"
 	"net/http"
+	_ "net/http/pprof"
 	smallbankapplication "onffchain/smallbankapplication/abci"
 	"onffchain/smallbankapplication/application"
 	"os"
@@ -50,18 +51,6 @@ func init() {
 }
 
 func main() {
-	go func() {
-		err := http.ListenAndServe(":8003", nil)
-		if err != nil {
-			return
-		}
-	}()
-	//go func() {
-	//	err := http.ListenAndServe(":8003", nil)
-	//	if err != nil {
-	//		return
-	//	}
-	//}()
 	flag.Parse()
 	// Set the core num
 	runtime.GOMAXPROCS(int(coreNum))
@@ -142,7 +131,6 @@ func main() {
 
 	app := smallbankapplication.NewSmallBankApplication(db)
 	acc := abciclient.NewLocalCreator(app)
-
 	logger := tmlog.MustNewDefaultLogger(tmlog.LogFormatPlain, tmlog.LogLevelInfo, false)
 	node, err := nm.New(config, logger, acc, gf)
 

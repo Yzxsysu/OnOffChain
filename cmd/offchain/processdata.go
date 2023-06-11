@@ -11,7 +11,7 @@ func CreateAccount(AccountName string, SavingBalance int, CheckingBalance int) {
 }
 
 func CreateAccountNum(accountNum int) {
-	for i := 0; i < accountNum; i++ {
+	for i := 0; i <= accountNum; i++ {
 		CreateAccount(strconv.Itoa(i), 1000, 1000)
 	}
 }

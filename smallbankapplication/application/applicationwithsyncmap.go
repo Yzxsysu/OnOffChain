@@ -9,10 +9,10 @@ import (
 func (BCstate *BlockchainState) GetBalanceWithSyncMap(TxId uint16, A string, txResult chan<- TxResult, sMap *sync.Map) {
 	// read only
 	// lock the account
-	BCstate.AccountLock[A].lock.RLock()
+	BCstate.AccountLock[A].lock.Lock()
 	AddComplexity(ByteLen, CycleNum)
 	// use defer to unlock
-	defer BCstate.AccountLock[A].lock.RUnlock()
+	defer BCstate.AccountLock[A].lock.Unlock()
 	// construct account dataA
 	var dataA AccountData
 	var result TxResult
