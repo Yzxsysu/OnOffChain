@@ -142,5 +142,5 @@ func WSHandlerSV(w http.ResponseWriter, r *http.Request) {
 	} else {
 		http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
 	}
-	log.Println("SubV send to channel")
+	//log.Println("SubV send to channel")
 }

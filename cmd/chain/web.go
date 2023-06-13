@@ -131,9 +131,9 @@ func WSHandler3(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			fmt.Println(err)
 		}
-		log.Println("V3:", V3)
+		//log.Println("V3:", V3)
 		application.MsgV3 <- V3
-		log.Println("send to channel")
+		//log.Println("send to channel")
 		_, err = w.Write([]byte("ok"))
 		if err != nil {
 			log.Println(err)
@@ -156,9 +156,9 @@ func WSHandler4(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			fmt.Println(err)
 		}
-		log.Println("V4:", V4)
+		//log.Println("V4:", V4)
 		application.MsgV4 <- V4
-		log.Println("send to channel")
+		//log.Println("send to channel")
 		_, err = w.Write([]byte("ok"))
 		if err != nil {
 			log.Println(err)
@@ -181,9 +181,9 @@ func WSHandler5(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			fmt.Println(err)
 		}
-		log.Println("V5:", V5)
+		//log.Println("V5:", V5)
 		application.MsgV5 <- V5
-		log.Println("send to channel")
+		//log.Println("send to channel")
 		_, err = w.Write([]byte("ok"))
 		if err != nil {
 			log.Println(err)
@@ -206,9 +206,9 @@ func WSHandler6(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			fmt.Println(err)
 		}
-		log.Println("V6:", V6)
+		//log.Println("V6:", V6)
 		application.MsgV6 <- V6
-		log.Println("send to channel")
+		//log.Println("send to channel")
 		_, err = w.Write([]byte("ok"))
 		if err != nil {
 			log.Println(err)

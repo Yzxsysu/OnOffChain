@@ -54,7 +54,8 @@ func main() {
 	flag.Parse()
 	// Set the core num
 	runtime.GOMAXPROCS(int(coreNum))
-
+	application.ByteLen = 0
+	application.CycleNum = 0
 	application.SetNum = SetNum
 	application.Group = int(group)
 	smallbankapplication.Ips = strings.Split(webIp, ",")

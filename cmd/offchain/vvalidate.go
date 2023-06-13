@@ -47,10 +47,12 @@ func OVValidate(s *[]SmallBankTransaction, u *[][]uint16, group int, v chan map[
 }
 
 func OVGetBalance(A string, version map[string]AccountVersion) {
+	AddComplexity(ByteLen, CycleNum)
 	// don't need to modify the state of BlockchainState
 }
 
 func OVAmalgamate(A string, B string, version map[string]AccountVersion) {
+	AddComplexity(ByteLen, CycleNum)
 	var SaveInt int
 	var CheckInt int
 	// init account version
@@ -102,6 +104,7 @@ func OVAmalgamate(A string, B string, version map[string]AccountVersion) {
 }
 
 func OVUpdateBalance(A string, Balance int, version map[string]AccountVersion) {
+	AddComplexity(ByteLen, CycleNum)
 	var CheckInt int
 	// init account version
 	_, ok := version[A]
@@ -131,6 +134,7 @@ func OVUpdateBalance(A string, Balance int, version map[string]AccountVersion) {
 }
 
 func OVUpdateSaving(A string, Balance int, version map[string]AccountVersion) {
+	AddComplexity(ByteLen, CycleNum)
 	var SaveInt int
 	// init account version
 	_, ok := version[A]
@@ -159,6 +163,7 @@ func OVUpdateSaving(A string, Balance int, version map[string]AccountVersion) {
 }
 
 func OVSendPayment(A string, B string, Balance int, version map[string]AccountVersion) {
+	AddComplexity(ByteLen, CycleNum)
 	var CheckIntA int
 	var CheckIntB int
 
@@ -213,6 +218,7 @@ func OVSendPayment(A string, B string, Balance int, version map[string]AccountVe
 }
 
 func OVWriteCheck(A string, Balance int, version map[string]AccountVersion) {
+	AddComplexity(ByteLen, CycleNum)
 	var SaveInt int
 	var CheckInt int
 

@@ -47,6 +47,8 @@ func init() {
 // 监听proposal的Sub和SubV即可
 func main() {
 	flag.Parse()
+	ByteLen = 0
+	CycleNum = 0
 	groupIp1, groupIp2, groupIp3 = SplitToThree(webIp)
 	groupPort1, groupPort2, groupPort3 = SplitToThree(webPort)
 

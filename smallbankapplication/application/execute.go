@@ -295,8 +295,8 @@ func CutGraph(m map[uint16][]Vertex, pq *queue.PriorityQueue, group int, visited
 			}
 		}
 	}
-	log.Println("After Sub")
-	log.Println("Sub length", len(sub))
+	//log.Println("After Sub")
+	//log.Println("Sub length", len(sub))
 	return sub, SubV
 }
 
