@@ -219,5 +219,5 @@ func (BCstate *BlockchainState) MergeSV(NewV map[string]AccountVersion) {
 			log.Println(err)
 		}
 	}
-	log.Println("MergeSV end")
+	//log.Println("MergeSV end")
 }
