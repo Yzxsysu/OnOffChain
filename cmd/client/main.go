@@ -12,6 +12,12 @@ import (
 
 // tx format: 127.0.0.1:20057/broadcast_tx_commit?tx="T=3,I=1,F=1,O=3,B=156>T=1,I=2,F=2,O=1,B=190"
 func main() {
+	// 先删除
+	err := os.Remove("client_tx.log") // 指定文件路径及名称
+	if err != nil {
+		// 如果发生错误，则打印错误信息
+		panic(err)
+	}
 	file, err := os.OpenFile("client_tx.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
 	if err != nil {
 		log.Fatal(err)
@@ -50,6 +56,6 @@ func main() {
 				fmt.Println(err)
 			}
 		}(str)
-		time.Sleep(time.Millisecond * 220)
+		time.Sleep(time.Millisecond * 230)
 	}
 }
