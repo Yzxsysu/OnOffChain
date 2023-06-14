@@ -19,7 +19,7 @@ func main() {
 	log.SetFlags(0)
 	log.SetOutput(file)
 	defer file.Close()
-	txs := application.GenerateTx(1000, 1000, 0.1)
+	txs := application.GenerateTx(1000, 100000, 0.1)
 	//fmt.Println(txs)
 	for {
 		var err error
@@ -50,6 +50,6 @@ func main() {
 				fmt.Println(err)
 			}
 		}(str)
-		time.Sleep(time.Millisecond * 200)
+		time.Sleep(time.Millisecond * 220)
 	}
 }

@@ -44,6 +44,11 @@ func init() {
 	flag.StringVar(&SetNum, "SetNum", "2f", "Group Num")
 }
 
+var (
+	ByteLen  int
+	CycleNum int
+)
+
 // 监听proposal的Sub和SubV即可
 func main() {
 	flag.Parse()

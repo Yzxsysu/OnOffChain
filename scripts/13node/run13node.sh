@@ -24,59 +24,59 @@ pkill -9 offchain
 
 case $nodeId in
     0)
-    ./build/chain/chain -home $TM_HOME/node${nodeId} -leader "true" -leaderIp "172.172.0.3:26657" -accountNum 1000 -OffChainIp "172.172.0.2" -OffChainPort "8090" -group 0 -coreNum 16 -webIp "172.172.0.4,172.172.0.5,172.172.0.6,172.172.0.7,172.172.0.8,172.172.0.9,172.172.0.10,172.172.0.11,172.172.0.12,172.172.0.13,172.172.0.14,172.172.0.15" -webPort "10157,10157,10157,10157,10157,10157,10157,10157,10157,10157,10157,10157" -SetNum "$division" -subscribeIp "" &> $LOG_DIR/node${nodeId}.log &
+    ./build/chain/chain -home $TM_HOME/node${nodeId} -leader "true" -leaderIp "172.172.0.3:26657" -accountNum 100000 -OffChainIp "172.172.0.2" -OffChainPort "8090" -group 0 -coreNum 16 -webIp "172.172.0.4,172.172.0.5,172.172.0.6,172.172.0.7,172.172.0.8,172.172.0.9,172.172.0.10,172.172.0.11,172.172.0.12,172.172.0.13,172.172.0.14,172.172.0.15" -webPort "10157,10157,10157,10157,10157,10157,10157,10157,10157,10157,10157,10157" -SetNum "$division" -subscribeIp "" &> $LOG_DIR/node${nodeId}.log &
     echo "the node Id is ${nodeId}"
     ;;
     1)
-    ./build/chain/chain -home $TM_HOME/node${nodeId} -leader "false" -leaderIp "172.172.0.3:26657" -accountNum 1000 -OffChainIp "172.172.0.2" -OffChainPort "8090" -group 1 -coreNum 16 -webIp "172.172.0.4,172.172.0.5,172.172.0.6,172.172.0.7,172.172.0.8,172.172.0.9,172.172.0.10,172.172.0.11,172.172.0.12,172.172.0.13,172.172.0.14,172.172.0.15" -webPort "10157,10157,10157,10157,10157,10157,10157,10157,10157,10157,10157,10157" -SetNum "$division" -subscribeIp "0.0.0.0:10157" &> $LOG_DIR/node${nodeId}.log &
+    ./build/chain/chain -home $TM_HOME/node${nodeId} -leader "false" -leaderIp "172.172.0.3:26657" -accountNum 100000 -OffChainIp "172.172.0.2" -OffChainPort "8090" -group 1 -coreNum 16 -webIp "172.172.0.4,172.172.0.5,172.172.0.6,172.172.0.7,172.172.0.8,172.172.0.9,172.172.0.10,172.172.0.11,172.172.0.12,172.172.0.13,172.172.0.14,172.172.0.15" -webPort "10157,10157,10157,10157,10157,10157,10157,10157,10157,10157,10157,10157" -SetNum "$division" -subscribeIp "0.0.0.0:10157" &> $LOG_DIR/node${nodeId}.log &
     echo "the node Id is ${nodeId}"
     ;;
     2)
-    ./build/chain/chain -home $TM_HOME/node${nodeId} -leader "false" -leaderIp "172.172.0.3:26657" -accountNum 1000 -OffChainIp "172.172.0.2" -OffChainPort "8090" -group 1 -coreNum 16 -webIp "172.172.0.4,172.172.0.5,172.172.0.6,172.172.0.7,172.172.0.8,172.172.0.9,172.172.0.10,172.172.0.11,172.172.0.12,172.172.0.13,172.172.0.14,172.172.0.15" -webPort "10157,10157,10157,10157,10157,10157,10157,10157,10157,10157,10157,10157" -SetNum "$division" -subscribeIp "0.0.0.0:10157" &> $LOG_DIR/node${nodeId}.log &
+    ./build/chain/chain -home $TM_HOME/node${nodeId} -leader "false" -leaderIp "172.172.0.3:26657" -accountNum 100000 -OffChainIp "172.172.0.2" -OffChainPort "8090" -group 1 -coreNum 16 -webIp "172.172.0.4,172.172.0.5,172.172.0.6,172.172.0.7,172.172.0.8,172.172.0.9,172.172.0.10,172.172.0.11,172.172.0.12,172.172.0.13,172.172.0.14,172.172.0.15" -webPort "10157,10157,10157,10157,10157,10157,10157,10157,10157,10157,10157,10157" -SetNum "$division" -subscribeIp "0.0.0.0:10157" &> $LOG_DIR/node${nodeId}.log &
     echo "the node Id is ${nodeId}"
     ;;
     3)
-    ./build/chain/chain -home $TM_HOME/node${nodeId} -leader "false" -leaderIp "172.172.0.3:26657" -accountNum 1000 -OffChainIp "172.172.0.2" -OffChainPort "8090" -group 1 -coreNum 16 -webIp "172.172.0.4,172.172.0.5,172.172.0.6,172.172.0.7,172.172.0.8,172.172.0.9,172.172.0.10,172.172.0.11,172.172.0.12,172.172.0.13,172.172.0.14,172.172.0.15" -webPort "10157,10157,10157,10157,10157,10157,10157,10157,10157,10157,10157,10157" -SetNum "$division" -subscribeIp "0.0.0.0:10157" &> $LOG_DIR/node${nodeId}.log &
+    ./build/chain/chain -home $TM_HOME/node${nodeId} -leader "false" -leaderIp "172.172.0.3:26657" -accountNum 100000 -OffChainIp "172.172.0.2" -OffChainPort "8090" -group 1 -coreNum 16 -webIp "172.172.0.4,172.172.0.5,172.172.0.6,172.172.0.7,172.172.0.8,172.172.0.9,172.172.0.10,172.172.0.11,172.172.0.12,172.172.0.13,172.172.0.14,172.172.0.15" -webPort "10157,10157,10157,10157,10157,10157,10157,10157,10157,10157,10157,10157" -SetNum "$division" -subscribeIp "0.0.0.0:10157" &> $LOG_DIR/node${nodeId}.log &
     echo "the node Id is ${nodeId}"
     ;;
     4)
-    ./build/chain/chain -home $TM_HOME/node${nodeId} -leader "false" -leaderIp "172.172.0.3:26657" -accountNum 1000 -OffChainIp "172.172.0.2" -OffChainPort "8090" -group 1 -coreNum 16 -webIp "172.172.0.4,172.172.0.5,172.172.0.6,172.172.0.7,172.172.0.8,172.172.0.9,172.172.0.10,172.172.0.11,172.172.0.12,172.172.0.13,172.172.0.14,172.172.0.15" -webPort "10157,10157,10157,10157,10157,10157,10157,10157,10157,10157,10157,10157" -SetNum "$division" -subscribeIp "0.0.0.0:10157" &> $LOG_DIR/node${nodeId}.log &
+    ./build/chain/chain -home $TM_HOME/node${nodeId} -leader "false" -leaderIp "172.172.0.3:26657" -accountNum 100000 -OffChainIp "172.172.0.2" -OffChainPort "8090" -group 1 -coreNum 16 -webIp "172.172.0.4,172.172.0.5,172.172.0.6,172.172.0.7,172.172.0.8,172.172.0.9,172.172.0.10,172.172.0.11,172.172.0.12,172.172.0.13,172.172.0.14,172.172.0.15" -webPort "10157,10157,10157,10157,10157,10157,10157,10157,10157,10157,10157,10157" -SetNum "$division" -subscribeIp "0.0.0.0:10157" &> $LOG_DIR/node${nodeId}.log &
     echo "the node Id is ${nodeId}"
     ;;
     5)
-    ./build/chain/chain -home $TM_HOME/node${nodeId} -leader "false" -leaderIp "172.172.0.3:26657" -accountNum 1000 -OffChainIp "172.172.0.2" -OffChainPort "8090" -group 2 -coreNum 16 -webIp "172.172.0.4,172.172.0.5,172.172.0.6,172.172.0.7,172.172.0.8,172.172.0.9,172.172.0.10,172.172.0.11,172.172.0.12,172.172.0.13,172.172.0.14,172.172.0.15" -webPort "10157,10157,10157,10157,10157,10157,10157,10157,10157,10157,10157,10157" -SetNum "$division" -subscribeIp "0.0.0.0:10157" &> $LOG_DIR/node${nodeId}.log &
+    ./build/chain/chain -home $TM_HOME/node${nodeId} -leader "false" -leaderIp "172.172.0.3:26657" -accountNum 100000 -OffChainIp "172.172.0.2" -OffChainPort "8090" -group 2 -coreNum 16 -webIp "172.172.0.4,172.172.0.5,172.172.0.6,172.172.0.7,172.172.0.8,172.172.0.9,172.172.0.10,172.172.0.11,172.172.0.12,172.172.0.13,172.172.0.14,172.172.0.15" -webPort "10157,10157,10157,10157,10157,10157,10157,10157,10157,10157,10157,10157" -SetNum "$division" -subscribeIp "0.0.0.0:10157" &> $LOG_DIR/node${nodeId}.log &
     echo "the node Id is ${nodeId}"
     ;;
     6)
-    ./build/chain/chain -home $TM_HOME/node${nodeId} -leader "false" -leaderIp "172.172.0.3:26657" -accountNum 1000 -OffChainIp "172.172.0.2" -OffChainPort "8090" -group 2 -coreNum 16 -webIp "172.172.0.4,172.172.0.5,172.172.0.6,172.172.0.7,172.172.0.8,172.172.0.9,172.172.0.10,172.172.0.11,172.172.0.12,172.172.0.13,172.172.0.14,172.172.0.15" -webPort "10157,10157,10157,10157,10157,10157,10157,10157,10157,10157,10157,10157" -SetNum "$division" -subscribeIp "0.0.0.0:10157" &> $LOG_DIR/node${nodeId}.log &
+    ./build/chain/chain -home $TM_HOME/node${nodeId} -leader "false" -leaderIp "172.172.0.3:26657" -accountNum 100000 -OffChainIp "172.172.0.2" -OffChainPort "8090" -group 2 -coreNum 16 -webIp "172.172.0.4,172.172.0.5,172.172.0.6,172.172.0.7,172.172.0.8,172.172.0.9,172.172.0.10,172.172.0.11,172.172.0.12,172.172.0.13,172.172.0.14,172.172.0.15" -webPort "10157,10157,10157,10157,10157,10157,10157,10157,10157,10157,10157,10157" -SetNum "$division" -subscribeIp "0.0.0.0:10157" &> $LOG_DIR/node${nodeId}.log &
     echo "the node Id is ${nodeId}"
     ;;
     7)
-    ./build/chain/chain -home $TM_HOME/node${nodeId} -leader "false" -leaderIp "172.172.0.3:26657" -accountNum 1000 -OffChainIp "172.172.0.2" -OffChainPort "8090" -group 2 -coreNum 16 -webIp "172.172.0.4,172.172.0.5,172.172.0.6,172.172.0.7,172.172.0.8,172.172.0.9,172.172.0.10,172.172.0.11,172.172.0.12,172.172.0.13,172.172.0.14,172.172.0.15" -webPort "10157,10157,10157,10157,10157,10157,10157,10157,10157,10157,10157,10157" -SetNum "$division" -subscribeIp "0.0.0.0:10157" &> $LOG_DIR/node${nodeId}.log &
+    ./build/chain/chain -home $TM_HOME/node${nodeId} -leader "false" -leaderIp "172.172.0.3:26657" -accountNum 100000 -OffChainIp "172.172.0.2" -OffChainPort "8090" -group 2 -coreNum 16 -webIp "172.172.0.4,172.172.0.5,172.172.0.6,172.172.0.7,172.172.0.8,172.172.0.9,172.172.0.10,172.172.0.11,172.172.0.12,172.172.0.13,172.172.0.14,172.172.0.15" -webPort "10157,10157,10157,10157,10157,10157,10157,10157,10157,10157,10157,10157" -SetNum "$division" -subscribeIp "0.0.0.0:10157" &> $LOG_DIR/node${nodeId}.log &
     echo "the node Id is ${nodeId}"
     ;;
     8)
-    ./build/chain/chain -home $TM_HOME/node${nodeId} -leader "false" -leaderIp "172.172.0.3:26657" -accountNum 1000 -OffChainIp "172.172.0.2" -OffChainPort "8090" -group 2 -coreNum 16 -webIp "172.172.0.4,172.172.0.5,172.172.0.6,172.172.0.7,172.172.0.8,172.172.0.9,172.172.0.10,172.172.0.11,172.172.0.12,172.172.0.13,172.172.0.14,172.172.0.15" -webPort "10157,10157,10157,10157,10157,10157,10157,10157,10157,10157,10157,10157" -SetNum "$division" -subscribeIp "0.0.0.0:10157" &> $LOG_DIR/node${nodeId}.log &
+    ./build/chain/chain -home $TM_HOME/node${nodeId} -leader "false" -leaderIp "172.172.0.3:26657" -accountNum 100000 -OffChainIp "172.172.0.2" -OffChainPort "8090" -group 2 -coreNum 16 -webIp "172.172.0.4,172.172.0.5,172.172.0.6,172.172.0.7,172.172.0.8,172.172.0.9,172.172.0.10,172.172.0.11,172.172.0.12,172.172.0.13,172.172.0.14,172.172.0.15" -webPort "10157,10157,10157,10157,10157,10157,10157,10157,10157,10157,10157,10157" -SetNum "$division" -subscribeIp "0.0.0.0:10157" &> $LOG_DIR/node${nodeId}.log &
     echo "the node Id is ${nodeId}"
     ;;
     9)
-    ./build/chain/chain -home $TM_HOME/node${nodeId} -leader "false" -leaderIp "172.172.0.3:26657" -accountNum 1000 -OffChainIp "172.172.0.2" -OffChainPort "8090" -group 3 -coreNum 16 -webIp "172.172.0.4,172.172.0.5,172.172.0.6,172.172.0.7,172.172.0.8,172.172.0.9,172.172.0.10,172.172.0.11,172.172.0.12,172.172.0.13,172.172.0.14,172.172.0.15" -webPort "10157,10157,10157,10157,10157,10157,10157,10157,10157,10157,10157,10157" -SetNum "$division" -subscribeIp "0.0.0.0:10157" &> $LOG_DIR/node${nodeId}.log &
+    ./build/chain/chain -home $TM_HOME/node${nodeId} -leader "false" -leaderIp "172.172.0.3:26657" -accountNum 100000 -OffChainIp "172.172.0.2" -OffChainPort "8090" -group 3 -coreNum 16 -webIp "172.172.0.4,172.172.0.5,172.172.0.6,172.172.0.7,172.172.0.8,172.172.0.9,172.172.0.10,172.172.0.11,172.172.0.12,172.172.0.13,172.172.0.14,172.172.0.15" -webPort "10157,10157,10157,10157,10157,10157,10157,10157,10157,10157,10157,10157" -SetNum "$division" -subscribeIp "0.0.0.0:10157" &> $LOG_DIR/node${nodeId}.log &
     echo "the node Id is ${nodeId}"
     ;;
     10)
-    ./build/chain/chain -home $TM_HOME/node${nodeId} -leader "false" -leaderIp "172.172.0.3:26657" -accountNum 1000 -OffChainIp "172.172.0.2" -OffChainPort "8090" -group 3 -coreNum 16 -webIp "172.172.0.4,172.172.0.5,172.172.0.6,172.172.0.7,172.172.0.8,172.172.0.9,172.172.0.10,172.172.0.11,172.172.0.12,172.172.0.13,172.172.0.14,172.172.0.15" -webPort "10157,10157,10157,10157,10157,10157,10157,10157,10157,10157,10157,10157" -SetNum "$division" -subscribeIp "0.0.0.0:10157" &> $LOG_DIR/node${nodeId}.log &
+    ./build/chain/chain -home $TM_HOME/node${nodeId} -leader "false" -leaderIp "172.172.0.3:26657" -accountNum 100000 -OffChainIp "172.172.0.2" -OffChainPort "8090" -group 3 -coreNum 16 -webIp "172.172.0.4,172.172.0.5,172.172.0.6,172.172.0.7,172.172.0.8,172.172.0.9,172.172.0.10,172.172.0.11,172.172.0.12,172.172.0.13,172.172.0.14,172.172.0.15" -webPort "10157,10157,10157,10157,10157,10157,10157,10157,10157,10157,10157,10157" -SetNum "$division" -subscribeIp "0.0.0.0:10157" &> $LOG_DIR/node${nodeId}.log &
     echo "the node Id is ${nodeId}"
     ;;
     11)
-    ./build/chain/chain -home $TM_HOME/node${nodeId} -leader "false" -leaderIp "172.172.0.3:26657" -accountNum 1000 -OffChainIp "172.172.0.2" -OffChainPort "8090" -group 3 -coreNum 16 -webIp "172.172.0.4,172.172.0.5,172.172.0.6,172.172.0.7,172.172.0.8,172.172.0.9,172.172.0.10,172.172.0.11,172.172.0.12,172.172.0.13,172.172.0.14,172.172.0.15" -webPort "10157,10157,10157,10157,10157,10157,10157,10157,10157,10157,10157,10157" -SetNum "$division" -subscribeIp "0.0.0.0:10157" &> $LOG_DIR/node${nodeId}.log &
+    ./build/chain/chain -home $TM_HOME/node${nodeId} -leader "false" -leaderIp "172.172.0.3:26657" -accountNum 100000 -OffChainIp "172.172.0.2" -OffChainPort "8090" -group 3 -coreNum 16 -webIp "172.172.0.4,172.172.0.5,172.172.0.6,172.172.0.7,172.172.0.8,172.172.0.9,172.172.0.10,172.172.0.11,172.172.0.12,172.172.0.13,172.172.0.14,172.172.0.15" -webPort "10157,10157,10157,10157,10157,10157,10157,10157,10157,10157,10157,10157" -SetNum "$division" -subscribeIp "0.0.0.0:10157" &> $LOG_DIR/node${nodeId}.log &
     echo "the node Id is ${nodeId}"
     ;;
     12)
-    ./build/chain/chain -home $TM_HOME/node${nodeId} -leader "false" -leaderIp "172.172.0.3:26657" -accountNum 1000 -OffChainIp "172.172.0.2" -OffChainPort "8090" -group 3 -coreNum 16 -webIp "172.172.0.4,172.172.0.5,172.172.0.6,172.172.0.7,172.172.0.8,172.172.0.9,172.172.0.10,172.172.0.11,172.172.0.12,172.172.0.13,172.172.0.14,172.172.0.15" -webPort "10157,10157,10157,10157,10157,10157,10157,10157,10157,10157,10157,10157" -SetNum "$division" -subscribeIp "0.0.0.0:10157" &> $LOG_DIR/node${nodeId}.log &
+    ./build/chain/chain -home $TM_HOME/node${nodeId} -leader "false" -leaderIp "172.172.0.3:26657" -accountNum 100000 -OffChainIp "172.172.0.2" -OffChainPort "8090" -group 3 -coreNum 16 -webIp "172.172.0.4,172.172.0.5,172.172.0.6,172.172.0.7,172.172.0.8,172.172.0.9,172.172.0.10,172.172.0.11,172.172.0.12,172.172.0.13,172.172.0.14,172.172.0.15" -webPort "10157,10157,10157,10157,10157,10157,10157,10157,10157,10157,10157,10157" -SetNum "$division" -subscribeIp "0.0.0.0:10157" &> $LOG_DIR/node${nodeId}.log &
     echo "the node Id is ${nodeId}"
     ;;
     -1)
-    ./build/offchain/offchain -accountNum 1000 -webIp "172.172.0.4,172.172.0.5,172.172.0.6,172.172.0.7,172.172.0.8,172.172.0.9,172.172.0.10,172.172.0.11,172.172.0.12,172.172.0.13,172.172.0.14,172.172.0.15" -webPort "10157,10157,10157,10157,10157,10157,10157,10157,10157,10157,10157,10157" -offChainIp "0.0.0.0" -offChainPort "8090" -SetNum "2f" &> $LOG_DIR/offchain.log &
+    ./build/offchain/offchain -accountNum 100000 -webIp "172.172.0.4,172.172.0.5,172.172.0.6,172.172.0.7,172.172.0.8,172.172.0.9,172.172.0.10,172.172.0.11,172.172.0.12,172.172.0.13,172.172.0.14,172.172.0.15" -webPort "10157,10157,10157,10157,10157,10157,10157,10157,10157,10157,10157,10157" -offChainIp "0.0.0.0" -offChainPort "8090" -SetNum "2f" &> $LOG_DIR/offchain.log &
     echo "the node Id is ${nodeId}, offchain node"
     ;;
 esac

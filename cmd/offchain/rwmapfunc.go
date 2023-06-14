@@ -55,11 +55,6 @@ func (m *RWMap) Each(f func(k uint16, v string) bool) {
 	}
 }
 
-var (
-	ByteLen  int
-	CycleNum int
-)
-
 func RWOGetBalance(TxId uint16, A string, m *RWMap, version map[string]AccountVersion) {
 	AddComplexity(ByteLen, CycleNum)
 	// don't need to modify the state of BlockchainState
