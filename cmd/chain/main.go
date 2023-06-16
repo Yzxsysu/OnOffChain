@@ -3,6 +3,8 @@ package main
 import (
 	"flag"
 	"fmt"
+	smallbankapplication "github.com/Yzxsysu/onoffchain/smallbankapplication/abci"
+	"github.com/Yzxsysu/onoffchain/smallbankapplication/application"
 	"github.com/spf13/viper"
 	abciclient "github.com/tendermint/tendermint/abci/client"
 	cfg "github.com/tendermint/tendermint/config"
@@ -12,8 +14,6 @@ import (
 	"log"
 	"net/http"
 	_ "net/http/pprof"
-	smallbankapplication "onffchain/smallbankapplication/abci"
-	"onffchain/smallbankapplication/application"
 	"os"
 	"os/signal"
 	"path/filepath"

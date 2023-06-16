@@ -1,4 +1,4 @@
-module onffchain
+module github.com/Yzxsysu/onoffchain
 
 go 1.19
 
