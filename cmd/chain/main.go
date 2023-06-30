@@ -55,8 +55,8 @@ func main() {
 	flag.Parse()
 	// Set the core num
 	runtime.GOMAXPROCS(int(coreNum))
-	application.ByteLen = 10240
-	application.CycleNum = 100
+	application.ByteLen = 1024
+	application.CycleNum = 10
 	// application.ByteLen = 0
 	// application.CycleNum = 0
 	application.SetNum = SetNum
