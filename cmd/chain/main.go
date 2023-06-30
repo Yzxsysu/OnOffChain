@@ -3,14 +3,6 @@ package main
 import (
 	"flag"
 	"fmt"
-	smallbankapplication "github.com/Yzxsysu/onoffchain/smallbankapplication/abci"
-	"github.com/Yzxsysu/onoffchain/smallbankapplication/application"
-	"github.com/spf13/viper"
-	abciclient "github.com/tendermint/tendermint/abci/client"
-	cfg "github.com/tendermint/tendermint/config"
-	tmlog "github.com/tendermint/tendermint/libs/log"
-	nm "github.com/tendermint/tendermint/node"
-	"github.com/tendermint/tendermint/types"
 	"log"
 	"net/http"
 	_ "net/http/pprof"
@@ -21,6 +13,15 @@ import (
 	"strconv"
 	"strings"
 	"syscall"
+
+	smallbankapplication "github.com/Yzxsysu/onoffchain/smallbankapplication/abci"
+	"github.com/Yzxsysu/onoffchain/smallbankapplication/application"
+	"github.com/spf13/viper"
+	abciclient "github.com/tendermint/tendermint/abci/client"
+	cfg "github.com/tendermint/tendermint/config"
+	tmlog "github.com/tendermint/tendermint/libs/log"
+	nm "github.com/tendermint/tendermint/node"
+	"github.com/tendermint/tendermint/types"
 )
 
 var homeDir, isLeader string
@@ -54,8 +55,10 @@ func main() {
 	flag.Parse()
 	// Set the core num
 	runtime.GOMAXPROCS(int(coreNum))
-	application.ByteLen = 0
-	application.CycleNum = 0
+	application.ByteLen = 10240
+	application.CycleNum = 100
+	// application.ByteLen = 0
+	// application.CycleNum = 0
 	application.SetNum = SetNum
 	application.Group = int(group)
 	smallbankapplication.Ips = strings.Split(webIp, ",")
