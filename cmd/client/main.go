@@ -2,12 +2,13 @@ package main
 
 import (
 	"fmt"
-	"github.com/Yzxsysu/onoffchain/smallbankapplication/application"
 	"log"
 	"net/http"
 	"os"
 	"strconv"
 	"time"
+
+	"github.com/Yzxsysu/onoffchain/smallbankapplication/application"
 )
 
 // tx format: 127.0.0.1:20057/broadcast_tx_commit?tx="T=3,I=1,F=1,O=3,B=156>T=1,I=2,F=2,O=1,B=190"
@@ -25,7 +26,7 @@ func main() {
 	log.SetFlags(0)
 	log.SetOutput(file)
 	defer file.Close()
-	txs := application.GenerateTx(1000, 100000, 0.5)
+	txs := application.GenerateTx(1000, 100000, 0.1)
 	//fmt.Println(txs)
 	for {
 		var err error

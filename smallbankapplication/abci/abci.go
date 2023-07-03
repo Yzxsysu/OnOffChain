@@ -4,12 +4,14 @@ import (
 	"bytes"
 	"encoding/binary"
 	"encoding/json"
-	"github.com/Yzxsysu/onoffchain/smallbankapplication/application"
-	abcicode "github.com/tendermint/tendermint/abci/example/code"
-	abcitypes "github.com/tendermint/tendermint/abci/types"
 	"log"
 	"net/http"
 	"net/url"
+	"time"
+
+	"github.com/Yzxsysu/onoffchain/smallbankapplication/application"
+	abcicode "github.com/tendermint/tendermint/abci/example/code"
+	abcitypes "github.com/tendermint/tendermint/abci/types"
 )
 
 // 实现abci接口
@@ -71,7 +73,10 @@ func (app SmallBankApplication) CheckTx(req abcitypes.RequestCheckTx) abcitypes.
 		//log.Println("Leader Check Tx Start")
 		//Sub, SubV, ReceiveTx := app.Node.ResolveAndExecuteTx(&req.Tx)
 		//log.Println("Before ResolveAndExecuteTxWithSyncMap")
+		start := time.Now()
 		Sub, SubV, ReceiveTx := app.Node.ResolveAndExecuteTxWithSyncMap(&req.Tx)
+		elapsed := time.Since(start)
+		log.Printf("onchain execute time: %s\n", elapsed)
 		//log.Println("After ResolveAndExecuteTxWithSyncMap")
 		go SendData(Sub, OffChainIp, OffChainPort, "/S")
 		go SendData(SubV, OffChainIp, OffChainPort, "/SV")
@@ -89,8 +94,11 @@ func (app SmallBankApplication) CheckTx(req abcitypes.RequestCheckTx) abcitypes.
 func (app *SmallBankApplication) DeliverTx(req abcitypes.RequestDeliverTx) abcitypes.ResponseDeliverTx {
 	if !app.Node.Leader {
 		//log.Println("replica DeliverTx")
+		start := time.Now()
 		ReceiveTx := application.ResolveTx(req.Tx)
 		app.Node.DValidate(ReceiveTx)
+		elapsed := time.Since(start)
+		log.Printf("onchain validate time: %s\n", elapsed)
 	} else {
 		//log.Println("Leader doesn't need to DeliverTx")
 	}
